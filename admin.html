@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Young Hadene</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="Young Hadene admin panel for managing blog posts.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>🔐</text></svg>">
+  <style>
+    .admin-overlay {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-top: var(--header-height);
+      background: var(--bg-primary);
+    }
+
+    .admin-panel {
+      width: 100%;
+      max-width: 720px;
+      padding: 48px 40px;
+    }
+
+    /* Login */
+    .login-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 48px 40px;
+      text-align: center;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    .login-box .login-icon {
+      font-size: 3rem;
+      margin-bottom: 16px;
+    }
+
+    .login-box h2 {
+      font-family: var(--font-heading);
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+
+    .login-box p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-bottom: 28px;
+    }
+
+    .login-box .form-group {
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    .login-box .form-group label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .login-box .form-group input {
+      width: 100%;
+      padding: 14px 16px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color var(--transition);
+    }
+
+    .login-box .form-group input:focus {
+      border-color: var(--accent);
+    }
+
+    .login-box .btn {
+      width: 100%;
+      justify-content: center;
+      margin-top: 8px;
+    }
+
+    .login-error {
+      color: var(--accent);
+      font-size: 0.8rem;
+      margin-top: 12px;
+      display: none;
+    }
+
+    .login-error.show {
+      display: block;
+    }
+
+    /* Settings Panel */
+    .settings-section {
+      margin-top: 40px;
+      padding-top: 40px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .settings-section h3 {
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      margin-bottom: 4px;
+    }
+
+    .settings-section .settings-desc {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      margin-bottom: 24px;
+    }
+
+    .settings-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+    }
+
+    .settings-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+
+    .settings-card.full {
+      grid-column: 1 / -1;
+    }
+
+    .settings-card label {
+      display: block;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .settings-card label .label-val {
+      color: var(--text-primary);
+      text-transform: none;
+      letter-spacing: 0;
+      font-weight: 400;
+      font-size: 0.9rem;
+    }
+
+    .settings-card input[type="time"],
+    .settings-card input[type="number"] {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .settings-card input:focus {
+      border-color: var(--accent);
+    }
+
+    .toggle-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .toggle-wrap label { margin: 0; }
+
+    .toggle {
+      position: relative;
+      width: 48px;
+      height: 26px;
+      background: var(--border-color);
+      border-radius: 13px;
+      cursor: pointer;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+
+    .toggle.active {
+      background: var(--accent);
+    }
+
+    .toggle::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 20px;
+      height: 20px;
+      background: #fff;
+      border-radius: 50%;
+      transition: transform 0.2s;
+    }
+
+    .toggle.active::after {
+      transform: translateX(22px);
+    }
+
+    .settings-status {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    .stat-box {
+      text-align: center;
+      padding: 16px 12px;
+      background: var(--bg-primary);
+      border-radius: 6px;
+    }
+
+    .stat-box .stat-num {
+      font-family: var(--font-heading);
+      font-size: 1.8rem;
+      color: var(--accent);
+      line-height: 1.2;
+    }
+
+    .stat-box .stat-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .server-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+    }
+
+    .server-status.online {
+      background: rgba(34, 197, 94, 0.1);
+      color: #22c55e;
+    }
+
+    .server-status.offline {
+      background: rgba(220, 38, 38, 0.1);
+      color: var(--accent);
+    }
+
+    .server-status .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .server-status.online .dot { background: #22c55e; }
+    .server-status.offline .dot { background: var(--accent); }
+
+    @media (max-width: 700px) {
+      .settings-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Dashboard */
+    .dashboard {
+      display: none;
+    }
+
+    .dashboard.show {
+      display: block;
+    }
+
+    .dashboard-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .dashboard-header h1 {
+      font-family: var(--font-heading);
+      font-size: 2.2rem;
+    }
+
+    .dashboard-header .user-badge {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .dashboard-header .user-badge span {
+      color: var(--accent);
+    }
+
+    /* Blog form */
+    .blog-form {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin-bottom: 40px;
+    }
+
+    .blog-form h3 {
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color var(--transition);
+    }
+
+    .form-group textarea {
+      min-height: 160px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--accent);
+    }
+
+    .form-group select {
+      cursor: pointer;
+    }
+
+    .form-group select option {
+      background: var(--bg-primary);
+    }
+
+    .form-group .char-count {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-align: right;
+      margin-top: 4px;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .form-actions .btn {
+      padding: 12px 24px;
+    }
+
+    .form-success {
+      display: none;
+      padding: 12px 16px;
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      border-radius: 6px;
+      color: #22c55e;
+      font-size: 0.85rem;
+      margin-bottom: 16px;
+    }
+
+    .form-success.show {
+      display: block;
+    }
+
+    /* Posts list */
+    .posts-list h3 {
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      margin-bottom: 16px;
+    }
+
+    .posts-list .empty-state {
+      text-align: center;
+      padding: 48px 24px;
+      background: var(--bg-card);
+      border: 1px dashed var(--border-color);
+      border-radius: var(--radius);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .posts-list .empty-state .empty-icon {
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+    }
+
+    .post-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      margin-bottom: 8px;
+      transition: border-color var(--transition);
+    }
+
+    .post-item:hover {
+      border-color: rgba(220, 38, 38, 0.2);
+    }
+
+    .post-item-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .post-item-info h4 {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      margin-bottom: 2px;
+    }
+
+    .post-item-info .post-meta {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .post-item-info .post-meta .cat {
+      color: var(--accent);
+    }
+
+    .post-item-actions {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+      margin-left: 16px;
+    }
+
+    .post-item-actions button {
+      padding: 6px 14px;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 600;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all var(--transition);
+      font-family: var(--font-body);
+    }
+
+    .post-item-actions .delete-btn {
+      background: rgba(220, 38, 38, 0.15);
+      color: var(--accent);
+    }
+
+    .post-item-actions .delete-btn:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .post-item-actions .edit-btn {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-secondary);
+    }
+
+    .post-item-actions .edit-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: var(--text-primary);
+    }
+
+    .post-item-actions .featured-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 10px;
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 600;
+      border-radius: 4px;
+      background: rgba(220, 38, 38, 0.1);
+      color: var(--accent);
+      border: none;
+      cursor: pointer;
+      transition: all var(--transition);
+      font-family: var(--font-body);
+    }
+
+    .post-item-actions .featured-badge:hover {
+      background: rgba(220, 38, 38, 0.2);
+    }
+
+    @media (max-width: 600px) {
+      .admin-panel { padding: 24px 16px; }
+      .login-box { padding: 32px 24px; }
+      .blog-form { padding: 24px; }
+      .form-row { grid-template-columns: 1fr; }
+      .post-item { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .post-item-actions { margin-left: 0; width: 100%; }
+      .dashboard-header { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        YOUNG<span class="logo-accent">HADENE</span>
+        <span class="logo-sub">Toronto • Dark Trap</span>
+      </a>
+      <button class="hamburger" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <nav>
+        <ul class="nav-list">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="blog.html" class="nav-link">Blog</a></li>
+          <li><a href="admin.html" class="nav-link active">Admin</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="admin-overlay">
+    <div class="admin-panel">
+
+      <!-- Login -->
+      <div class="login-box" id="loginBox">
+        <div class="login-icon">🔐</div>
+        <h2>Admin Access</h2>
+        <p>Enter your password to manage blog posts.</p>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="passwordInput" placeholder="Enter password" onkeydown="if(event.key==='Enter')handleLogin()">
+        </div>
+        <button class="btn btn-primary" onclick="handleLogin()">Unlock</button>
+        <div class="login-error" id="loginError">Incorrect password. Try again.</div>
+      </div>
+
+      <!-- Dashboard -->
+      <div class="dashboard" id="dashboard">
+        <div class="dashboard-header">
+          <div>
+            <h1>Blog <span class="text-accent">Manager</span></h1>
+            <div class="user-badge">Logged in as <span>Young Hadene</span></div>
+          </div>
+          <button class="btn btn-outline" onclick="handleLogout()">Logout</button>
+        </div>
+
+        <div class="form-success" id="formSuccess">Post published successfully!</div>
+
+        <!-- Create/Edit Form -->
+        <div class="blog-form" id="blogForm">
+          <h3 id="formTitle">New Post</h3>
+          <input type="hidden" id="postId" value="">
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Title</label>
+              <input type="text" id="postTitle" placeholder="Post title" maxlength="100">
+              <div class="char-count"><span id="titleCount">0</span>/100</div>
+            </div>
+            <div class="form-group">
+              <label>Category</label>
+              <select id="postCategory">
+                <option value="Music">Music</option>
+                <option value="Toronto">Toronto</option>
+                <option value="Lifestyle">Lifestyle</option>
+                <option value="Behind The Scenes">Behind The Scenes</option>
+                <option value="Studio Sessions">Studio Sessions</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Content</label>
+            <textarea id="postContent" placeholder="Write your blog post content here..." maxlength="5000"></textarea>
+            <div class="char-count"><span id="contentCount">0</span>/5000</div>
+          </div>
+
+          <div class="form-group">
+            <label>
+              <input type="checkbox" id="postFeatured" style="width:auto;accent-color:var(--accent);margin-right:8px">
+              Feature this post (shows as the large featured article at the top)
+            </label>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn btn-primary" onclick="savePost()">Publish Post</button>
+            <button class="btn btn-ghost" onclick="resetForm()" style="display:none" id="cancelBtn">Cancel</button>
+          </div>
+        </div>
+
+        <!-- Posts List -->
+        <div class="posts-list">
+          <h3>All Posts</h3>
+          <div id="postsContainer"></div>
+        </div>
+
+        <!-- AI Auto-Gen Settings -->
+        <div class="settings-section">
+          <h3>AI Auto-<span class="text-accent">Generation</span></h3>
+          <div class="settings-desc">Schedule automated blog posts using AI. Requires the Node.js API server to be running (<code>node server.js</code>).</div>
+
+          <div id="serverStatus" class="server-status offline"><span class="dot"></span> Server offline</div>
+
+          <div class="settings-grid">
+            <div class="settings-card">
+              <label>Auto-Generate</label>
+              <div class="toggle-wrap">
+                <label style="font-size:0.8rem;text-transform:none;letter-spacing:0;font-weight:400;margin:0">Enable daily posts</label>
+                <div class="toggle" id="toggleEnable" onclick="toggleScheduler()"></div>
+              </div>
+            </div>
+
+            <div class="settings-card">
+              <label>Schedule Time</label>
+              <input type="time" id="settingsTime" value="09:00">
+            </div>
+
+            <div class="settings-card">
+              <label>Posts Per Day</label>
+              <input type="number" id="settingsQuantity" min="1" max="20" value="1">
+              <div style="font-size:0.65rem;color:var(--text-muted);margin-top:4px">Max 20 per day</div>
+            </div>
+          </div>
+
+          <div class="settings-status" id="settingsStats">
+            <div class="stat-box">
+              <div class="stat-num" id="statTotal">0</div>
+              <div class="stat-label">Total Generated</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-num" id="statLastQty">-</div>
+              <div class="stat-label">Last Run</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-num" id="statNext">-</div>
+              <div class="stat-label">Next Run</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-num" id="statStatus">-</div>
+              <div class="stat-label">Status</div>
+            </div>
+          </div>
+
+          <div class="form-actions" style="margin-top:16px">
+            <button class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
+            <button class="btn btn-outline" id="generateNowBtn" onclick="generateNow()">Generate Now</button>
+            <span id="genSpinner" style="display:none;color:var(--text-muted);font-size:0.8rem;align-self:center">Generating...</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const PASSWORD = 'HadeneCalixte1998';
+    const STORAGE_KEY = 'yh_blogPosts';
+    const SESSION_KEY = 'yh_admin';
+
+    // ---- Auth ----
+    function handleLogin() {
+      const pw = document.getElementById('passwordInput').value;
+      if (pw === PASSWORD) {
+        sessionStorage.setItem(SESSION_KEY, 'true');
+        document.getElementById('loginBox').style.display = 'none';
+        document.getElementById('dashboard').classList.add('show');
+        loadPosts();
+      } else {
+        document.getElementById('loginError').classList.add('show');
+      }
+    }
+
+    function handleLogout() {
+      sessionStorage.removeItem(SESSION_KEY);
+      document.getElementById('loginBox').style.display = 'block';
+      document.getElementById('dashboard').classList.remove('show');
+      document.getElementById('passwordInput').value = '';
+      document.getElementById('loginError').classList.remove('show');
+    }
+
+    // Check session on load
+    (function() {
+      if (sessionStorage.getItem(SESSION_KEY) === 'true') {
+        document.getElementById('loginBox').style.display = 'none';
+        document.getElementById('dashboard').classList.add('show');
+      }
+    })();
+
+    // ---- Blog CRUD ----
+    function getPosts() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+      } catch { return []; }
+    }
+
+    function savePosts(posts) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+    }
+
+    function loadPosts() {
+      const posts = getPosts();
+      const container = document.getElementById('postsContainer');
+
+      if (posts.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">📝</div>
+            <p>No posts yet. Write your first blog post above.</p>
+          </div>
+        `;
+        return;
+      }
+
+      posts.sort((a, b) => b.dateNum - a.dateNum);
+
+      container.innerHTML = posts.map(post => `
+        <div class="post-item">
+          <div class="post-item-info">
+            <h4>${escapeHtml(post.title)}</h4>
+            <div class="post-meta">
+              <span class="cat">${escapeHtml(post.category)}</span>
+              &middot; ${post.date}
+              ${post.featured ? '&middot; <span style="color:var(--accent)">★ Featured</span>' : ''}
+            </div>
+          </div>
+          <div class="post-item-actions">
+            <button class="featured-badge" onclick="toggleFeatured(${post.id})">${post.featured ? '★' : '☆'}</button>
+            <button class="edit-btn" onclick="editPost(${post.id})">Edit</button>
+            <button class="delete-btn" onclick="deletePost(${post.id})">Delete</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function savePost() {
+      const id = document.getElementById('postId').value;
+      const title = document.getElementById('postTitle').value.trim();
+      const category = document.getElementById('postCategory').value;
+      const content = document.getElementById('postContent').value.trim();
+      const featured = document.getElementById('postFeatured').checked;
+
+      if (!title) { alert('Enter a title.'); return; }
+      if (!content) { alert('Enter some content.'); return; }
+
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+      let posts = getPosts();
+
+      if (id) {
+        // Edit existing
+        const idx = posts.findIndex(p => p.id === Number(id));
+        if (idx !== -1) {
+          posts[idx] = { ...posts[idx], title, category, content, featured, date: dateStr, dateNum: Date.now() };
+        }
+      } else {
+        // New post
+        const newPost = {
+          id: Date.now(),
+          title,
+          slug: title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
+          category,
+          content,
+          date: dateStr,
+          dateNum: Date.now(),
+          featured
+        };
+        posts.push(newPost);
+      }
+
+      savePosts(posts);
+      loadPosts();
+      showSuccess();
+      resetForm();
+    }
+
+    function editPost(id) {
+      const posts = getPosts();
+      const post = posts.find(p => p.id === id);
+      if (!post) return;
+
+      document.getElementById('formTitle').textContent = 'Edit Post';
+      document.getElementById('postId').value = post.id;
+      document.getElementById('postTitle').value = post.title;
+      document.getElementById('postCategory').value = post.category;
+      document.getElementById('postContent').value = post.content;
+      document.getElementById('postFeatured').checked = post.featured;
+      document.getElementById('cancelBtn').style.display = 'inline-flex';
+      updateCounts();
+      document.getElementById('blogForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function deletePost(id) {
+      if (!confirm('Delete this post?')) return;
+      let posts = getPosts();
+      posts = posts.filter(p => p.id !== id);
+      savePosts(posts);
+      loadPosts();
+    }
+
+    function toggleFeatured(id) {
+      let posts = getPosts();
+      const post = posts.find(p => p.id === id);
+      if (post) {
+        // Only one featured at a time
+        if (!post.featured) {
+          posts.forEach(p => p.featured = false);
+        }
+        post.featured = !post.featured;
+        savePosts(posts);
+        loadPosts();
+      }
+    }
+
+    function resetForm() {
+      document.getElementById('formTitle').textContent = 'New Post';
+      document.getElementById('postId').value = '';
+      document.getElementById('postTitle').value = '';
+      document.getElementById('postCategory').value = 'Music';
+      document.getElementById('postContent').value = '';
+      document.getElementById('postFeatured').checked = false;
+      document.getElementById('cancelBtn').style.display = 'none';
+      updateCounts();
+    }
+
+    function showSuccess() {
+      const el = document.getElementById('formSuccess');
+      el.classList.add('show');
+      setTimeout(() => el.classList.remove('show'), 3000);
+    }
+
+    // ---- Char counts ----
+    document.getElementById('postTitle').addEventListener('input', updateCounts);
+    document.getElementById('postContent').addEventListener('input', updateCounts);
+
+    function updateCounts() {
+      document.getElementById('titleCount').textContent = document.getElementById('postTitle').value.length;
+      document.getElementById('contentCount').textContent = document.getElementById('postContent').value.length;
+    }
+
+    // ---- Utilities ----
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // ── AI Auto-Gen Settings ──
+    const API_URL = '';
+
+    function checkServer() {
+      const el = document.getElementById('serverStatus');
+      fetch(API_URL + '/api/status')
+        .then(r => {
+          if (r.ok) {
+            el.className = 'server-status online';
+            el.innerHTML = '<span class="dot"></span> Server online';
+            loadSettings();
+          } else {
+            throw new Error();
+          }
+        })
+        .catch(() => {
+          el.className = 'server-status offline';
+          el.innerHTML = '<span class="dot"></span> Server offline';
+        });
+    }
+
+    function loadSettings() {
+      fetch(API_URL + '/api/settings')
+        .then(r => r.json())
+        .then(s => {
+          document.getElementById('settingsTime').value = s.time || '09:00';
+          document.getElementById('settingsQuantity').value = s.quantity || 1;
+          const toggle = document.getElementById('toggleEnable');
+          toggle.classList.toggle('active', s.enabled);
+
+          document.getElementById('statTotal').textContent = s.totalGenerated || 0;
+          document.getElementById('statLastQty').textContent = s.lastRunPosts ? s.lastRunPosts + ' posts' : '-';
+          document.getElementById('statNext').textContent = s.nextRun ? new Date(s.nextRun).toLocaleString() : 'Not scheduled';
+          const statusMap = { success: '✅ Success', partial: '⚠️ Partial', failed: '❌ Failed' };
+          document.getElementById('statStatus').textContent = s.lastRun ? (statusMap[s.lastRunStatus] || s.lastRunStatus) : 'Never run';
+        })
+        .catch(() => {});
+    }
+
+    function saveSettings() {
+      const btn = document.querySelector('.form-actions .btn-primary');
+      btn.textContent = 'Saving...';
+      btn.disabled = true;
+
+      fetch(API_URL + '/api/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          enabled: document.getElementById('toggleEnable').classList.contains('active'),
+          time: document.getElementById('settingsTime').value,
+          quantity: parseInt(document.getElementById('settingsQuantity').value, 10) || 1,
+        }),
+      })
+        .then(r => r.json())
+        .then(s => {
+          btn.textContent = 'Save Settings';
+          btn.disabled = false;
+          loadSettings();
+          showGenSuccess('Settings saved');
+        })
+        .catch(() => {
+          btn.textContent = 'Save Settings';
+          btn.disabled = false;
+          alert('Could not connect to server. Is it running? (node server.js)');
+        });
+    }
+
+    function toggleScheduler() {
+      document.getElementById('toggleEnable').classList.toggle('active');
+    }
+
+    function generateNow() {
+      const q = parseInt(document.getElementById('settingsQuantity').value, 10) || 1;
+      const btn = document.getElementById('generateNowBtn');
+      const spinner = document.getElementById('genSpinner');
+      btn.style.display = 'none';
+      spinner.style.display = 'inline-flex';
+
+      fetch(API_URL + '/api/generate?q=' + q, { method: 'POST' })
+        .then(r => r.json())
+        .then(result => {
+          spinner.style.display = 'none';
+          btn.style.display = 'inline-flex';
+          if (result.success) {
+            showGenSuccess(`Generated ${result.count} post(s) successfully!`);
+            loadSettings();
+          } else {
+            alert('Generation failed: ' + (result.error || 'Unknown error'));
+          }
+        })
+        .catch(() => {
+          spinner.style.display = 'none';
+          btn.style.display = 'inline-flex';
+          alert('Could not connect to server. Is it running? (node server.js)');
+        });
+    }
+
+    function showGenSuccess(msg) {
+      const el = document.getElementById('formSuccess');
+      el.textContent = msg;
+      el.classList.add('show');
+      setTimeout(() => {
+        el.classList.remove('show');
+        el.textContent = 'Post published successfully!';
+      }, 4000);
+    }
+
+    // Check server on dashboard load
+    const origLoadPosts = loadPosts;
+    loadPosts = function() {
+      origLoadPosts();
+      checkServer();
+    };
+  </script>
+</body>
+</html>

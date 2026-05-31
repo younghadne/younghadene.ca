@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog — Young Hadene: Toronto Music, Culture & Behind the Scenes</title>
+  <meta name="description" content="Young Hadene's blog — Toronto hip-hop, studio sessions, lifestyle, behind the scenes, and dark trap culture from the 6ix.">
+  <link rel="canonical" href="https://younghadene.ca/blog.html">
+  <meta property="og:title" content="Blog — Young Hadene: Toronto Music, Culture & Behind the Scenes">
+  <meta property="og:description" content="Toronto hip-hop, studio sessions, lifestyle, behind the scenes, and dark trap culture from the 6ix.">
+  <meta property="og:image" content="https://younghadene.ca/images/poster1.png">
+  <meta property="og:url" content="https://younghadene.ca/blog.html">
+  <meta property="og:type" content="blog">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Blog — Young Hadene: Toronto Music & Culture">
+  <meta name="twitter:image" content="https://younghadene.ca/images/poster1.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "name": "Young Hadene Blog",
+    "description": "Toronto hip-hop, studio sessions, lifestyle, and dark trap culture from the 6ix.",
+    "url": "https://younghadene.ca/blog.html",
+    "author": {
+      "@type": "MusicGroup",
+      "name": "Young Hadene"
+    }
+  }
+  </script>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>🎧</text></svg>">
+  <style>
+    .blog-list-view { display: block; }
+    .blog-list-view.hidden { display: none; }
+    .blog-single-view { display: none; }
+    .blog-single-view.show { display: block; }
+
+    .post-full {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 40px 0;
+    }
+
+    .post-full .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 32px;
+      cursor: pointer;
+      transition: color var(--transition);
+    }
+
+    .post-full .back-link:hover { color: var(--accent); }
+
+    .post-full .post-full-header {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .post-full .post-full-header .post-date {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+
+    .post-full .post-full-header .category-tag {
+      display: inline-block;
+      padding: 4px 12px;
+      background: var(--accent);
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border-radius: 4px;
+      margin-bottom: 12px;
+    }
+
+    .post-full .post-full-header h2 {
+      font-size: 2rem;
+      font-family: var(--font-heading);
+      letter-spacing: 0.04em;
+      line-height: 1.1;
+    }
+
+    .post-full .post-full-body {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: var(--text-secondary);
+    }
+
+    .post-full .post-full-body p {
+      margin-bottom: 20px;
+    }
+
+    .no-posts-msg {
+      text-align: center;
+      padding: 60px 24px;
+      color: var(--text-muted);
+      grid-column: 1 / -1;
+    }
+    .no-posts-msg .icon { font-size: 2.5rem; margin-bottom: 12px; }
+    .no-posts-msg p { font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        YOUNG<span class="logo-accent">HADENE</span>
+        <span class="logo-sub">Toronto • Dark Trap</span>
+      </a>
+      <button class="hamburger" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <nav>
+        <ul class="nav-list">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="music.html" class="nav-link">Music</a></li>
+          <li><a href="blog.html" class="nav-link active">Blog</a></li>
+          <li><a href="contact.html" class="nav-link">Contact</a></li>
+          <li><a href="admin.html" class="nav-link" style="color:var(--text-muted);font-size:0.7rem;">Admin</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===== PAGE HERO ===== -->
+  <section class="page-hero">
+    <div class="container">
+      <span class="section-label">The 6ix Voice</span>
+      <h1 class="section-title">The <span class="text-accent">Blog</span></h1>
+      <p class="section-subtitle">Toronto music, studio stories, lifestyle, and everything behind the curtain.</p>
+      <div class="blog-categories" id="categoryFilters">
+        <a href="#" data-cat="all" class="active">All</a>
+        <a href="#" data-cat="Music">Music</a>
+        <a href="#" data-cat="Toronto">Toronto</a>
+        <a href="#" data-cat="Lifestyle">Lifestyle</a>
+        <a href="#" data-cat="Behind The Scenes">Behind The Scenes</a>
+        <a href="#" data-cat="Studio Sessions">Studio Sessions</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== BLOG LIST VIEW ===== -->
+  <div class="blog-list-view" id="blogListView">
+
+    <!-- Featured Article -->
+    <section class="section" style="padding-top: 0;">
+      <div class="container">
+        <div class="featured-article fade-in" id="featuredArticle"></div>
+      </div>
+    </section>
+
+    <!-- Blog Grid -->
+    <section class="blog-grid-section">
+      <div class="container">
+        <div class="blog-grid" id="blogGrid"></div>
+
+        <!-- Pagination -->
+        <div class="pagination" id="pagination"></div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ===== BLOG SINGLE POST VIEW ===== -->
+  <div class="blog-single-view section" id="blogSingleView">
+    <div class="container">
+      <div class="post-full">
+        <a class="back-link" onclick="backToList()">&#8592; Back to all posts</a>
+        <div id="postFullContent"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">
+            YOUNG<span class="logo-accent">HADENE</span>
+            <span class="logo-sub">Toronto • Dark Trap</span>
+          </a>
+          <p>Heavy 808s from the 6ix. Built different. Representing Toronto's underground sound worldwide.</p>
+          <div class="footer-social">
+            <a href="#" aria-label="Instagram">&#x1F4F7;</a>
+            <a href="#" aria-label="Twitter / X">&#x1D54F;</a>
+            <a href="#" aria-label="YouTube">&#x25B6;</a>
+            <a href="#" aria-label="Spotify">&#x266B;</a>
+            <a href="#" aria-label="SoundCloud">&#x2601;</a>
+          </div>
+        </div>
+        <div>
+          <h4>Navigate</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="music.html">Music</a></li>
+            <li><a href="blog.html">Blog</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="admin.html">Admin</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Music</h4>
+          <ul>
+            <li><a href="#">Spotify</a></li>
+            <li><a href="#">Apple Music</a></li>
+            <li><a href="#">SoundCloud</a></li>
+            <li><a href="#">YouTube Music</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Contact</h4>
+          <ul>
+            <li><a href="mailto:contact@younghadene.ca">Email</a></li>
+            <li><a href="#">Bookings</a></li>
+            <li><a href="#">Press Kit</a></li>
+            <li><a href="#">Collaborate</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Young Hadene. All rights reserved. Toronto. 6ix.</p>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const STORAGE_KEY = 'yh_blogPosts';
+
+    // ---- Default fallback posts ----
+    const DEFAULT_POSTS = [
+      { id: 1780258321927, title: 'What to Know About melodic drill rap artists in 2026', slug: 'what-to-know-about-melodic-drill-rap-artists-in-2026', category: 'Music', date: 'May 31, 2026', dateNum: 1780258321927, featured: false, content: 'A deep dive into melodic drill rap artists.' },
+      { id: 1780257977431, title: 'What to Know About Caribbean influence on drill music in 2026', slug: 'what-to-know-about-caribbean-influence-on-drill-music-in-202', category: 'Toronto', date: 'May 31, 2026', dateNum: 1780257977431, featured: false, content: 'A deep dive into Caribbean influence on drill music.' },
+      { id: 1780257953675, title: 'What to Know About Haitian-Toronto music fusion in 2026', slug: 'what-to-know-about-haitian-toronto-music-fusion-in-2026', category: 'Toronto', date: 'May 31, 2026', dateNum: 1780257953675, featured: false, content: 'A deep dive into Haitian-Toronto music fusion.' },
+      { id: 1780257768027, title: 'What to Know About Haitian Canadian artists to know in 2026', slug: 'what-to-know-about-haitian-canadian-artists-to-know-in-2026', category: 'Toronto', date: 'May 31, 2026', dateNum: 1780257768027, featured: false, content: 'A deep dive into Haitian Canadian artists to know.' },
+      { id: 8, title: 'Best Toronto Rappers 2026 — Top Toronto Hip Hop Artists Ranked', slug: 'top-toronto-rappers', category: 'Music', date: 'May 31, 2026', dateNum: 1748736000000, featured: true, content: "The definitive list of the best Toronto rappers — from Drake to the underground drill scene. Includes Haitian-Toronto drill artist Young Hadene, Jazz Cartier, Sean Leon, and more. Read the full article: https://younghadene.ca/blog/top-toronto-rappers.html" },
+      { id: 1, title: 'The Underground Toronto Sound: Why 2026 Is Different', slug: 'underground-toronto-sound-2026', category: 'Toronto', date: 'May 28, 2026', dateNum: 1748448000000, featured: false, content: "The city's hip-hop scene has shifted. From basement studios in Scarborough to sold-out shows at the Danforth Music Hall, Toronto's underground is louder and more authentic than ever. Here's what changed and who's leading it." },
+      { id: 2, title: 'Late Night in the Lab — Building "No Sleep"', slug: 'late-night-lab-no-sleep', category: 'Studio Sessions', date: 'May 20, 2026', dateNum: 1747785600000, featured: false, content: 'The making of the heaviest track yet. From 3 AM melodies to 808s that shake the walls. Every great track starts with a late night. This one was no different — pulling inspiration from the empty Toronto streets at 3 AM, the hum of the city that never quite sleeps.' },
+      { id: 3, title: 'Toronto After Midnight — A Dark Trap Diary', slug: 'toronto-after-midnight', category: 'Lifestyle', date: 'May 14, 2026', dateNum: 1747267200000, featured: false, content: 'Night drives through the 6ix, empty streets, and the inspiration that only comes after midnight. There is something about this city when the lights dim and the crowds disappear.' },
+      { id: 4, title: 'From Basement to Stage — The First Show', slug: 'basement-to-stage-first-show', category: 'Behind The Scenes', date: 'May 7, 2026', dateNum: 1746662400000, featured: false, content: 'Behind the scenes of the first live performance. The nerves, the energy, the moments they don\'t show you. Walking on stage for the first time is something you never forget.' },
+      { id: 5, title: 'Top 10 Underground Toronto Tracks (2026)', slug: 'top-10-underground-toronto-tracks-2026', category: 'Music', date: 'Apr 28, 2026', dateNum: 1745884800000, featured: false, content: 'The songs that are defining the current wave. Heavy beats, raw lyricism, and real Toronto energy. From Scarborough to Rexdale, these are the tracks that matter right now.' },
+      { id: 6, title: 'The Venues That Built Toronto\'s Sound', slug: 'venues-built-toronto-sound', category: 'Toronto', date: 'Apr 19, 2026', dateNum: 1745107200000, featured: false, content: 'From the Phoenix to Smiling Buddha, a look at the stages that shaped the 6ix music scene. These venues were more than just rooms — they were launching pads.' },
+      { id: 7, title: 'Studio Gear Setup — The Dark Trap Signal Chain', slug: 'studio-gear-dark-trap-signal-chain', category: 'Studio Sessions', date: 'Apr 10, 2026', dateNum: 1744329600000, featured: false, content: 'Breaking down the hardware and software that creates the signature heavy sound. Mic, preamp, interface, plugins. Here is exactly what goes into the signal chain.' }
+    ];
+
+    function getPosts() {
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (parsed.length > 0) return parsed;
+        }
+      } catch {}
+      // Seed defaults on first visit
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_POSTS));
+      return DEFAULT_POSTS;
+    }
+
+    let currentCategory = 'all';
+    let posts = [];
+
+    function renderBlog() {
+      posts = getPosts();
+      posts.sort((a, b) => b.dateNum - a.dateNum);
+
+      renderFeatured();
+      renderGrid();
+      renderPagination();
+    }
+
+    function renderFeatured() {
+      const container = document.getElementById('featuredArticle');
+      const featured = posts.find(p => p.featured) || posts[0];
+      if (!featured) { container.innerHTML = ''; return; }
+
+      container.innerHTML = `
+        <div class="featured-card">
+          <div class="featured-image">
+            <span class="featured-image-label">${featured.category.substring(0, 4).toUpperCase()}</span>
+            <div class="featured-image-overlay">
+              <span class="category-badge">${escapeHtml(featured.category)}</span>
+            </div>
+          </div>
+          <div class="featured-content">
+            <span class="post-date">${featured.date}</span>
+            <h2>${escapeHtml(featured.title)}</h2>
+            <p>${escapeHtml(truncate(featured.content, 150))}</p>
+            <a class="read-more" onclick="openPost(${featured.id})">Read Article &#8594;</a>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderGrid() {
+      const container = document.getElementById('blogGrid');
+      const filtered = currentCategory === 'all'
+        ? posts.filter(p => !p.featured || posts.filter(x => x.featured).length === 0)
+        : posts.filter(p => p.category === currentCategory && !p.featured);
+
+      // If we have a featured post, exclude it from the grid
+      const hasFeatured = posts.some(p => p.featured);
+      const gridPosts = hasFeatured ? filtered.filter(p => !p.featured) : filtered;
+      // If no filter active and no featured, show all
+      const displayPosts = currentCategory === 'all' && !hasFeatured ? posts : gridPosts;
+      // Recalculate properly
+      let finalPosts;
+      if (currentCategory === 'all') {
+        finalPosts = hasFeatured ? posts.filter(p => !p.featured) : posts;
+      } else {
+        finalPosts = posts.filter(p => p.category === currentCategory);
+      }
+
+      if (finalPosts.length === 0) {
+        container.innerHTML = '<div class="no-posts-msg"><div class="icon">📝</div><p>No posts in this category yet. Check back soon.</p></div>';
+        return;
+      }
+
+      container.innerHTML = finalPosts.map(post => {
+        const externalLink = extractLink(post.content);
+        const cleanContent = externalLink ? post.content.replace(externalLink, '').trim() : post.content;
+        return `
+        <article class="blog-card fade-in">
+          <div class="blog-card-image">
+            <span class="card-art-label">${post.category.substring(0, 6).toUpperCase()}</span>
+            <span class="category-tag">${escapeHtml(post.category)}</span>
+          </div>
+          <div class="blog-card-body">
+            <span class="post-date">${post.date}</span>
+            <h3>${escapeHtml(post.title)}</h3>
+            <p>${escapeHtml(truncate(cleanContent, 120))}</p>
+            ${externalLink ? `<a href="${escapeHtml(externalLink)}" class="read-more">Read Full Article &#8594;</a>` : `<a class="read-more" onclick="openPost(${post.id})">Read &#8594;</a>`}
+          </div>
+        </article>`;
+      }).join('');
+
+      // Re-trigger fade-in on new elements
+      requestAnimationFrame(() => {
+        document.querySelectorAll('#blogGrid .fade-in').forEach(el => {
+          el.classList.add('visible');
+        });
+      });
+    }
+
+    function renderPagination() {
+      const container = document.getElementById('pagination');
+      const filtered = currentCategory === 'all' ? posts.filter(p => !p.featured) : posts.filter(p => p.category === currentCategory);
+      if (filtered.length <= 6) { container.innerHTML = ''; return; }
+      const pages = Math.ceil(filtered.length / 6);
+      container.innerHTML = Array.from({ length: pages }, (_, i) =>
+        `<a href="#" class="${i === 0 ? 'active' : ''}">${i + 1}</a>`
+      ).join('') + '<a href="#">&#8594;</a>';
+    }
+
+    // ---- Category filter ----
+    document.getElementById('categoryFilters').addEventListener('click', (e) => {
+      const link = e.target.closest('a');
+      if (!link) return;
+      e.preventDefault();
+      document.querySelectorAll('#categoryFilters a').forEach(a => a.classList.remove('active'));
+      link.classList.add('active');
+      currentCategory = link.dataset.cat;
+      renderGrid();
+      renderPagination();
+    });
+
+    // ---- Single post view ----
+    function openPost(id) {
+      const post = posts.find(p => p.id === id);
+      if (!post) return;
+
+      document.getElementById('blogListView').classList.add('hidden');
+      document.getElementById('blogSingleView').classList.add('show');
+
+      document.getElementById('postFullContent').innerHTML = `
+        <div class="post-full-header">
+          <span class="category-tag">${escapeHtml(post.category)}</span>
+          <span class="post-date">${post.date}</span>
+          <h2>${escapeHtml(post.title)}</h2>
+        </div>
+        <div class="post-full-body">
+          ${post.content.split('\n').filter(p => p.trim()).map(p => `<p>${escapeHtml(p.trim())}</p>`).join('')}
+        </div>
+      `;
+
+      // Inject Article schema for this post
+      let schema = document.getElementById('postSchema');
+      if (!schema) {
+        schema = document.createElement('script');
+        schema.id = 'postSchema';
+        schema.type = 'application/ld+json';
+        document.head.appendChild(schema);
+      }
+      schema.textContent = JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": post.title,
+        "datePublished": post.date,
+        "author": {
+          "@type": "MusicGroup",
+          "name": "Young Hadene"
+        },
+        "url": "https://younghadene.ca/blog.html",
+        "articleSection": post.category
+      });
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function backToList() {
+      document.getElementById('blogSingleView').classList.remove('show');
+      document.getElementById('blogListView').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ---- Utilities ----
+    function truncate(str, len) {
+      if (str.length <= len) return str;
+      return str.substring(0, len).replace(/\s+\S*$/, '') + '...';
+    }
+    function extractLink(str) {
+      const match = str.match(/https?:\/\/[^\s]+/);
+      return match ? match[0] : null;
+    }
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // ---- Init ----
+    document.addEventListener('DOMContentLoaded', renderBlog);
+  </script>
+  <script src="js/main.js"></script>
+</body>
+</html>

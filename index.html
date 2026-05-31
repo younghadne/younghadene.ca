@@ -3,6 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#050505">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>Young Hadene | Haitian-Toronto Drill & Dark Trap Artist</title>
   <meta name="description" content="Young Hadene is a Haitian-Toronto drill and dark trap artist. Haitian-born, Toronto-raised — blending hard-hitting street narratives with melodic hooks. Stream latest releases.">
   <link rel="canonical" href="https://younghadene.ca/">
@@ -11,12 +15,21 @@
   <meta property="og:image" content="https://younghadene.ca/images/poster1.png">
   <meta property="og:url" content="https://younghadene.ca/">
   <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Young Hadene">
+  <meta property="article:author" content="Young Hadene">
+  <meta property="fb:app_id" content="younghadene">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Young Hadene | Haitian-Toronto Drill & Dark Trap Artist">
   <meta name="twitter:description" content="Haitian-Toronto drill and dark trap artist. Haitian-born, Toronto-raised.">
   <meta name="twitter:image" content="https://younghadene.ca/images/poster1.png">
+  <meta name="twitter:site" content="@younghadene">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://open.spotify.com">
+  <link rel="dns-prefetch" href="https://www.youtube.com">
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>🎧</text></svg>">
+  <link rel="alternate" type="application/rss+xml" title="Young Hadene Blog RSS" href="https://younghadene.ca/api/rss.xml">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -170,6 +183,7 @@
           <li><a href="index.html" class="nav-link active">Home</a></li>
           <li><a href="music.html" class="nav-link">Music</a></li>
           <li><a href="blog.html" class="nav-link">Blog</a></li>
+          <li><a href="services.html" class="nav-link">Services</a></li>
           <li><a href="contact.html" class="nav-link">Contact</a></li>
           <li><a href="admin.html" class="nav-link" style="color:var(--text-muted);font-size:0.7rem;">Admin</a></li>
         </ul>
@@ -180,7 +194,7 @@
   <!-- ===== HERO ===== -->
   <section class="hero">
     <div class="hero-bg">
-      <div class="hero-image" style="position:absolute;inset:0;z-index:0;background:url('images/poster1.png') center center/cover no-repeat;opacity:0.35;"></div>
+      <div class="hero-image" style="position:absolute;inset:0;z-index:0;background:url('images/poster1.png') center center/cover no-repeat;opacity:0.35;" fetchpriority="high"></div>
       <div class="hero-gradient"></div>
       <div class="hero-particles"></div>
       <div class="hero-vignette"></div>
@@ -242,7 +256,7 @@
     <div class="container">
       <div class="about-grid">
         <div class="about-image fade-in">
-          <img src="images/poster2.png" alt="Young Hadene dark trap Toronto promotional poster — cinematic city aesthetic with red neon lighting" style="width:100%;height:100%;object-fit:cover;">
+          <img src="images/poster2.png" alt="Young Hadene dark trap Toronto promotional poster — cinematic city aesthetic with red neon lighting" loading="lazy" style="width:100%;height:100%;object-fit:cover;">
           <div class="about-image-overlay">
             <span>Toronto • 6ix</span>
           </div>
@@ -547,5 +561,6 @@
   </footer>
 
   <script src="js/main.js"></script>
+  <script>(function(){var d={path:location.pathname,referrer:document.referrer||'',ua:navigator.userAgent,pageTitle:document.title};if(navigator.sendBeacon){navigator.sendBeacon('/api/track',JSON.stringify(d))}else{var x=new XMLHttpRequest();x.open('POST','/api/track',true);x.setRequestHeader('Content-Type','application/json');x.send(JSON.stringify(d))}})();</script>
 </body>
 </html>

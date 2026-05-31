@@ -85,4 +85,40 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // ---- Animated Counters ----
+  function animateCounter(el) {
+    const target = parseInt(el.getAttribute('data-target'), 10);
+    if (!target) return;
+    const duration = 2000;
+    const startTime = performance.now();
+    const startVal = 0;
+
+    function update(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = Math.floor(eased * target);
+      el.textContent = current;
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      } else {
+        el.textContent = target;
+      }
+    }
+    requestAnimationFrame(update);
+  }
+
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateCounter(entry.target);
+        counterObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll('.featured-stat-number').forEach(el => {
+    counterObserver.observe(el);
+  });
+
 });

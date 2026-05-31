@@ -1,57 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://younghadene.ca/</loc>
-    <lastmod>2026-05-31</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://younghadene.ca/blog.html</loc>
-    <lastmod>2026-05-31</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://younghadene.ca/music.html</loc>
-    <lastmod>2026-05-31</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://younghadene.ca/blog/top-toronto-rappers.html</loc>
-    <lastmod>2026-05-31</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://younghadene.ca/contact.html</loc>
-    <lastmod>2026-05-31</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://younghadene.ca/blog/what-to-know-about-haitian-canadian-artists-to-know-in-2026.html</loc>
-    <lastmod>2026-05-31</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://younghadene.ca/blog/what-to-know-about-haitian-toronto-music-fusion-in-2026.html</loc>
-    <lastmod>2026-05-31</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://younghadene.ca/blog/what-to-know-about-caribbean-influence-on-drill-music-in-202.html</loc>
-    <lastmod>2026-05-31</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://younghadene.ca/blog/what-to-know-about-melodic-drill-rap-artists-in-2026.html</loc>
-    <lastmod>2026-05-31</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
+  <url><loc>https://younghadene.ca/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://younghadene.ca/music.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://younghadene.ca/blog.html</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://younghadene.ca/services.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://younghadene.ca/contact.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://younghadene.ca/blog/what-to-know-about-melodic-drill-rap-artists-in-2026.html</loc><lastmod>May 31, 2026</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://younghadene.ca/blog/what-to-know-about-caribbean-influence-on-drill-music-in-202.html</loc><lastmod>May 31, 2026</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://younghadene.ca/blog/what-to-know-about-haitian-toronto-music-fusion-in-2026.html</loc><lastmod>May 31, 2026</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://younghadene.ca/blog/what-to-know-about-haitian-canadian-artists-to-know-in-2026.html</loc><lastmod>May 31, 2026</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://younghadene.ca/blog/top-toronto-rappers.html</loc><lastmod>May 31, 2026</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://younghadene.ca/blog/underground-toronto-sound-2026.html</loc><lastmod>May 28, 2026</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://younghadene.ca/blog/late-night-lab-no-sleep.html</loc><lastmod>May 20, 2026</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://younghadene.ca/blog/toronto-after-midnight.html</loc><lastmod>May 14, 2026</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://younghadene.ca/blog/basement-to-stage-first-show.html</loc><lastmod>May 7, 2026</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://younghadene.ca/blog/top-10-underground-toronto-tracks-2026.html</loc><lastmod>Apr 28, 2026</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://younghadene.ca/blog/venues-built-toronto-sound.html</loc><lastmod>Apr 19, 2026</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://younghadene.ca/blog/studio-gear-dark-trap-signal-chain.html</loc><lastmod>Apr 10, 2026</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
 </urlset>

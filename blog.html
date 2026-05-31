@@ -448,5 +448,6 @@
     document.addEventListener('DOMContentLoaded', renderBlog);
   </script>
   <script src="js/main.js"></script>
+  <script>(function(){var d={path:location.pathname,referrer:document.referrer||'',ua:navigator.userAgent,pageTitle:document.title};if(navigator.sendBeacon){navigator.sendBeacon('/api/track',JSON.stringify(d))}else{var x=new XMLHttpRequest();x.open('POST','/api/track',true);x.setRequestHeader('Content-Type','application/json');x.send(JSON.stringify(d))}})();</script>
 </body>
 </html>

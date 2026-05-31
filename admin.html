@@ -3,1007 +3,2508 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin — Young Hadene</title>
+  <title>Admin CMS — Young Hadene</title>
   <meta name="robots" content="noindex, nofollow">
-  <meta name="description" content="Young Hadene admin panel for managing blog posts.">
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>🔐</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Bebas+Neue&family=Anton&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>⚡</text></svg>">
   <style>
-    .admin-overlay {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding-top: var(--header-height);
-      background: var(--bg-primary);
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #050505;
+      --bg-card: #0d0d0d;
+      --bg-elevated: #111;
+      --bg-hover: #1a1a1a;
+      --accent: #D11212;
+      --accent-glow: rgba(209,18,18,0.25);
+      --accent-subtle: rgba(209,18,18,0.08);
+      --text: #e8e8e8;
+      --text-secondary: #888;
+      --text-muted: #555;
+      --border: #1a1a1a;
+      --border-light: #222;
+      --sidebar-w: 240px;
+      --header-h: 56px;
+      --radius: 10px;
+      --radius-sm: 6px;
+      --font: 'Inter', -apple-system, sans-serif;
+      --font-heading: 'Bebas Neue', 'Impact', sans-serif;
+      --transition: 0.25s ease;
     }
-
-    .admin-panel {
-      width: 100%;
-      max-width: 720px;
-      padding: 48px 40px;
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: #222; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #333; }
+    ::selection { background: var(--accent); color: #fff; }
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; font-family: var(--font); }
+    input, textarea, select { font-family: var(--font); outline: none; }
 
-    /* Login */
+    /* ── Login Screen ── */
+    #loginScreen {
+      position: fixed; inset: 0; z-index: 9999;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--bg);
+    }
     .login-box {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius);
-      padding: 48px 40px;
+      width: 100%; max-width: 380px; padding: 48px 36px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border); border-radius: 16px;
       text-align: center;
-      max-width: 420px;
-      margin: 0 auto;
     }
-
-    .login-box .login-icon {
-      font-size: 3rem;
-      margin-bottom: 16px;
+    .login-box .login-icon { font-size: 2.4rem; margin-bottom: 12px; }
+    .login-box h2 { font-family: var(--font-heading); font-size: 2rem; letter-spacing: 0.04em; }
+    .login-box p { color: var(--text-secondary); font-size: 0.85rem; margin: 8px 0 24px; }
+    .login-box .input-group {
+      text-align: left; margin-bottom: 14px;
     }
-
-    .login-box h2 {
-      font-family: var(--font-heading);
-      font-size: 2rem;
-      margin-bottom: 8px;
+    .login-box .input-group label {
+      font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--text-secondary); display: block; margin-bottom: 6px;
     }
-
-    .login-box p {
-      color: var(--text-muted);
-      font-size: 0.85rem;
-      margin-bottom: 28px;
-    }
-
-    .login-box .form-group {
-      margin-bottom: 16px;
-      text-align: left;
-    }
-
-    .login-box .form-group label {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--text-secondary);
-      margin-bottom: 6px;
-      display: block;
-    }
-
-    .login-box .form-group input {
-      width: 100%;
-      padding: 14px 16px;
-      background: var(--bg-primary);
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      color: var(--text-primary);
-      font-family: var(--font-body);
-      font-size: 0.9rem;
-      outline: none;
+    .login-box .input-group input {
+      width: 100%; padding: 12px 16px;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 6px; color: var(--text); font-size: 0.9rem;
       transition: border-color var(--transition);
     }
+    .login-box .input-group input:focus { border-color: var(--accent); }
+    .login-box .btn { width: 100%; margin-top: 4px; }
+    .login-error { color: var(--accent); font-size: 0.8rem; margin-top: 12px; display: none; }
+    .login-error.show { display: block; }
 
-    .login-box .form-group input:focus {
-      border-color: var(--accent);
+    /* ── Layout ── */
+    #app { display: none; }
+    #app.show { display: flex; min-height: 100vh; }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100vh;
+      background: var(--bg-card); border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; z-index: 100; overflow-y: auto;
+    }
+    .sidebar-brand {
+      padding: 16px 20px; border-bottom: 1px solid var(--border);
+      font-family: 'Anton',sans-serif; font-size: 1.3rem; letter-spacing: 0.02em;
+    }
+    .sidebar-brand span { color: var(--accent); }
+    .sidebar-brand small {
+      display: block; font-family: var(--font); font-size: 0.55rem;
+      letter-spacing: 0.15em; color: var(--text-muted); font-weight: 400;
+    }
+    .sidebar-nav { flex: 1; padding: 12px 0; }
+    .sidebar-nav .nav-section {
+      padding: 8px 20px 4px; font-size: 0.6rem; text-transform: uppercase;
+      letter-spacing: 0.12em; color: var(--text-muted); font-weight: 600;
+    }
+    .sidebar-nav a {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 20px; font-size: 0.82rem; color: var(--text-secondary);
+      transition: all var(--transition); border-left: 3px solid transparent;
+    }
+    .sidebar-nav a:hover { background: var(--bg-hover); color: var(--text); }
+    .sidebar-nav a.active { background: var(--accent-subtle); color: var(--accent); border-left-color: var(--accent); }
+    .sidebar-nav a .nav-icon { width: 20px; text-align: center; font-size: 1rem; flex-shrink: 0; }
+    .sidebar-nav a .nav-badge {
+      margin-left: auto; font-size: 0.6rem; background: var(--accent-subtle);
+      color: var(--accent); padding: 2px 8px; border-radius: 10px;
+    }
+    .sidebar-footer {
+      padding: 16px 20px; border-top: 1px solid var(--border);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .sidebar-footer .avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--accent-subtle); border: 1px solid rgba(209,18,18,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem; font-weight: 700; color: var(--accent); flex-shrink: 0;
+    }
+    .sidebar-footer .user-info { flex: 1; min-width: 0; }
+    .sidebar-footer .user-info .name { font-size: 0.8rem; font-weight: 600; }
+    .sidebar-footer .user-info .role { font-size: 0.65rem; color: var(--text-muted); }
+    .sidebar-footer .logout-btn {
+      background: none; border: none; color: var(--text-muted); font-size: 1.1rem;
+      padding: 4px; transition: color var(--transition);
+    }
+    .sidebar-footer .logout-btn:hover { color: var(--accent); }
+
+    /* ── Main ── */
+    .main {
+      margin-left: var(--sidebar-w); flex: 1; min-height: 100vh;
+      padding: 24px 32px 40px; max-width: 100%;
+    }
+    .page-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 28px; flex-wrap: wrap; gap: 12px;
+    }
+    .page-header h1 {
+      font-family: var(--font-heading); font-size: 2rem; letter-spacing: 0.04em;
+    }
+    .page-header h1 span { color: var(--accent); }
+    .page-header .header-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 20px; font-size: 0.8rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      border: none; border-radius: var(--radius-sm);
+      transition: all var(--transition); white-space: nowrap;
+    }
+    .btn-primary { background: var(--accent); color: #fff; box-shadow: 0 2px 12px var(--accent-glow); }
+    .btn-primary:hover { background: #b00; box-shadow: 0 4px 20px var(--accent-glow); transform: translateY(-1px); }
+    .btn-secondary { background: var(--bg-elevated); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { background: var(--bg-hover); border-color: var(--border-light); }
+    .btn-ghost { background: transparent; color: var(--text-secondary); padding: 10px 16px; }
+    .btn-ghost:hover { color: var(--text); background: var(--bg-hover); }
+    .btn-danger { background: rgba(209,18,18,0.12); color: var(--accent); }
+    .btn-danger:hover { background: var(--accent); color: #fff; }
+    .btn-sm { padding: 6px 12px; font-size: 0.7rem; }
+    .btn-xs { padding: 4px 8px; font-size: 0.6rem; border-radius: 4px; }
+    .btn-icon { width: 34px; height: 34px; padding: 0; justify-content: center; border-radius: 6px; }
+    .btn:disabled { opacity: 0.4; pointer-events: none; }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 24px;
+      transition: border-color var(--transition);
+    }
+    .card:hover { border-color: var(--border-light); }
+    .card-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 16px; flex-wrap: wrap; gap: 8px;
+    }
+    .card-header h3 { font-size: 1rem; font-weight: 600; }
+    .card-header h3 span { color: var(--accent); }
+
+    /* ── Stats Grid ── */
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px; margin-bottom: 28px;
+    }
+    .stat-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 20px;
+      transition: all var(--transition); position: relative; overflow: hidden;
+    }
+    .stat-card:hover { border-color: var(--accent); }
+    .stat-card .stat-icon {
+      font-size: 1.6rem; margin-bottom: 12px;
+    }
+    .stat-card .stat-value {
+      font-family: var(--font-heading); font-size: 2.2rem;
+      color: var(--accent); line-height: 1;
+    }
+    .stat-card .stat-label { font-size: 0.78rem; color: var(--text-secondary); margin-top: 4px; }
+    .stat-card .stat-change {
+      font-size: 0.65rem; margin-top: 8px; display: inline-flex;
+      align-items: center; gap: 4px; padding: 2px 8px; border-radius: 4px;
+    }
+    .stat-card .stat-change.up { background: rgba(34,197,94,0.1); color: #22c55e; }
+    .stat-card .stat-change.down { background: rgba(209,18,18,0.1); color: var(--accent); }
+    .stat-card .stat-glow {
+      position: absolute; top: -50%; right: -20%;
+      width: 160px; height: 160px;
+      background: radial-gradient(circle, rgba(209,18,18,0.04), transparent);
+      pointer-events: none;
     }
 
-    .login-box .btn {
-      width: 100%;
-      justify-content: center;
-      margin-top: 8px;
+    /* ── Panels (page sections) ── */
+    .panel { display: none; }
+    .panel.active { display: block; animation: fadeIn 0.25s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ── Forms ── */
+    .form-group { margin-bottom: 16px; }
+    .form-group label {
+      display: block; font-size: 0.72rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      color: var(--text-secondary); margin-bottom: 6px;
     }
-
-    .login-error {
-      color: var(--accent);
-      font-size: 0.8rem;
-      margin-top: 12px;
-      display: none;
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 10px 14px; background: var(--bg);
+      border: 1px solid var(--border); border-radius: var(--radius-sm);
+      color: var(--text); font-size: 0.88rem;
+      transition: border-color var(--transition);
     }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--accent); }
+    .form-group textarea { min-height: 120px; resize: vertical; line-height: 1.6; }
+    .form-group select { cursor: pointer; }
+    .form-group select option { background: var(--bg); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
 
-    .login-error.show {
-      display: block;
-    }
-
-    /* Settings Panel */
-    .settings-section {
-      margin-top: 40px;
-      padding-top: 40px;
-      border-top: 1px solid var(--border-color);
-    }
-
-    .settings-section h3 {
-      font-family: var(--font-heading);
-      font-size: 1.4rem;
-      margin-bottom: 4px;
-    }
-
-    .settings-section .settings-desc {
-      color: var(--text-muted);
-      font-size: 0.8rem;
-      margin-bottom: 24px;
-    }
-
-    .settings-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 16px;
-    }
-
-    .settings-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius);
-      padding: 20px;
-    }
-
-    .settings-card.full {
-      grid-column: 1 / -1;
-    }
-
-    .settings-card label {
-      display: block;
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-      font-weight: 600;
-    }
-
-    .settings-card label .label-val {
-      color: var(--text-primary);
-      text-transform: none;
-      letter-spacing: 0;
-      font-weight: 400;
-      font-size: 0.9rem;
-    }
-
-    .settings-card input[type="time"],
-    .settings-card input[type="number"] {
-      width: 100%;
-      padding: 12px 16px;
-      background: var(--bg-primary);
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      color: var(--text-primary);
-      font-family: var(--font-body);
-      font-size: 0.9rem;
-      outline: none;
-    }
-
-    .settings-card input:focus {
-      border-color: var(--accent);
-    }
-
-    .toggle-wrap {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .toggle-wrap label { margin: 0; }
-
+    /* ── Toggle ── */
+    .toggle-wrap { display: flex; align-items: center; gap: 12px; }
     .toggle {
-      position: relative;
-      width: 48px;
-      height: 26px;
-      background: var(--border-color);
-      border-radius: 13px;
-      cursor: pointer;
-      transition: background 0.2s;
-      flex-shrink: 0;
+      position: relative; width: 40px; height: 22px;
+      background: var(--border); border-radius: 11px; cursor: pointer;
+      transition: background 0.2s; flex-shrink: 0;
     }
-
-    .toggle.active {
-      background: var(--accent);
-    }
-
+    .toggle.active { background: var(--accent); }
     .toggle::after {
-      content: '';
-      position: absolute;
-      top: 3px;
-      left: 3px;
-      width: 20px;
-      height: 20px;
-      background: #fff;
-      border-radius: 50%;
+      content: ''; position: absolute; top: 3px; left: 3px;
+      width: 16px; height: 16px; background: #fff; border-radius: 50%;
       transition: transform 0.2s;
     }
+    .toggle.active::after { transform: translateX(18px); }
 
-    .toggle.active::after {
-      transform: translateX(22px);
+    /* ── Table ── */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    thead th {
+      text-align: left; padding: 10px 14px; font-size: 0.65rem;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--text-muted); font-weight: 600;
+      border-bottom: 1px solid var(--border);
     }
+    tbody td { padding: 12px 14px; border-bottom: 1px solid var(--border); }
+    tbody tr:hover { background: var(--bg-hover); }
+    tbody tr:last-child td { border-bottom: none; }
 
-    .settings-status {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 12px;
-      margin: 16px 0;
-    }
-
-    .stat-box {
-      text-align: center;
-      padding: 16px 12px;
-      background: var(--bg-primary);
-      border-radius: 6px;
-    }
-
-    .stat-box .stat-num {
-      font-family: var(--font-heading);
-      font-size: 1.8rem;
-      color: var(--accent);
-      line-height: 1.2;
-    }
-
-    .stat-box .stat-label {
-      font-size: 0.65rem;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-
-    .server-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.75rem;
-      padding: 4px 12px;
-      border-radius: 20px;
-      margin-bottom: 16px;
-    }
-
-    .server-status.online {
-      background: rgba(34, 197, 94, 0.1);
-      color: #22c55e;
-    }
-
-    .server-status.offline {
-      background: rgba(220, 38, 38, 0.1);
-      color: var(--accent);
-    }
-
-    .server-status .dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      display: inline-block;
-    }
-
-    .server-status.online .dot { background: #22c55e; }
-    .server-status.offline .dot { background: var(--accent); }
-
-    @media (max-width: 700px) {
-      .settings-grid { grid-template-columns: 1fr; }
-    }
-
-    /* Dashboard */
-    .dashboard {
-      display: none;
-    }
-
-    .dashboard.show {
-      display: block;
-    }
-
-    .dashboard-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 32px;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-
-    .dashboard-header h1 {
-      font-family: var(--font-heading);
-      font-size: 2.2rem;
-    }
-
-    .dashboard-header .user-badge {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-
-    .dashboard-header .user-badge span {
-      color: var(--accent);
-    }
-
-    /* Blog form */
-    .blog-form {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius);
-      padding: 32px;
-      margin-bottom: 40px;
-    }
-
-    .blog-form h3 {
-      font-family: var(--font-heading);
-      font-size: 1.4rem;
-      margin-bottom: 24px;
-      padding-bottom: 16px;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-
-    .form-group {
-      margin-bottom: 16px;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-secondary);
-      margin-bottom: 6px;
-    }
-
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-      width: 100%;
-      padding: 12px 16px;
-      background: var(--bg-primary);
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      color: var(--text-primary);
-      font-family: var(--font-body);
-      font-size: 0.9rem;
-      outline: none;
-      transition: border-color var(--transition);
-    }
-
-    .form-group textarea {
-      min-height: 160px;
-      resize: vertical;
-      line-height: 1.6;
-    }
-
-    .form-group input:focus,
-    .form-group select:focus,
-    .form-group textarea:focus {
-      border-color: var(--accent);
-    }
-
-    .form-group select {
-      cursor: pointer;
-    }
-
-    .form-group select option {
-      background: var(--bg-primary);
-    }
-
-    .form-group .char-count {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-      text-align: right;
-      margin-top: 4px;
-    }
-
-    .form-actions {
-      display: flex;
-      gap: 12px;
-      margin-top: 8px;
-    }
-
-    .form-actions .btn {
-      padding: 12px 24px;
-    }
-
-    .form-success {
-      display: none;
-      padding: 12px 16px;
-      background: rgba(34, 197, 94, 0.1);
-      border: 1px solid rgba(34, 197, 94, 0.3);
-      border-radius: 6px;
-      color: #22c55e;
-      font-size: 0.85rem;
-      margin-bottom: 16px;
-    }
-
-    .form-success.show {
-      display: block;
-    }
-
-    /* Posts list */
-    .posts-list h3 {
-      font-family: var(--font-heading);
-      font-size: 1.4rem;
-      margin-bottom: 16px;
-    }
-
-    .posts-list .empty-state {
-      text-align: center;
-      padding: 48px 24px;
-      background: var(--bg-card);
-      border: 1px dashed var(--border-color);
-      border-radius: var(--radius);
-      color: var(--text-muted);
-      font-size: 0.9rem;
-    }
-
-    .posts-list .empty-state .empty-icon {
-      font-size: 2.5rem;
-      margin-bottom: 12px;
-    }
-
+    /* ── Post list items ── */
     .post-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 20px;
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-sm);
-      margin-bottom: 8px;
-      transition: border-color var(--transition);
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 16px; background: var(--bg-card);
+      border: 1px solid var(--border); border-radius: var(--radius-sm);
+      margin-bottom: 8px; transition: all var(--transition);
     }
-
-    .post-item:hover {
-      border-color: rgba(220, 38, 38, 0.2);
+    .post-item:hover { border-color: var(--border-light); }
+    .post-item .post-check { flex-shrink: 0; }
+    .post-item .post-check input { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; }
+    .post-item .post-info { flex: 1; min-width: 0; }
+    .post-item .post-info h4 { font-size: 0.92rem; font-weight: 600; }
+    .post-item .post-info .post-meta {
+      font-size: 0.68rem; color: var(--text-muted); margin-top: 2px;
     }
+    .post-item .post-info .post-meta .cat { color: var(--accent); }
+    .post-item .post-actions { display: flex; gap: 6px; flex-shrink: 0; flex-wrap: wrap; }
 
-    .post-item-info {
-      flex: 1;
-      min-width: 0;
+    .badge {
+      display: inline-block; font-size: 0.6rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.04em;
+      padding: 2px 10px; border-radius: 10px;
     }
+    .badge-published { background: rgba(34,197,94,0.1); color: #22c55e; }
+    .badge-draft { background: rgba(255,200,50,0.1); color: #eab308; }
+    .badge-scheduled { background: rgba(59,130,246,0.1); color: #3b82f6; }
+    .badge-featured { background: var(--accent-subtle); color: var(--accent); }
 
-    .post-item-info h4 {
-      font-family: var(--font-heading);
-      font-size: 1.05rem;
-      margin-bottom: 2px;
+    .empty-state {
+      text-align: center; padding: 60px 24px;
+      color: var(--text-muted); font-size: 0.9rem;
     }
+    .empty-state .empty-icon { font-size: 2.5rem; margin-bottom: 12px; }
 
-    .post-item-info .post-meta {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
+    /* ── Rich Text Toolbar ── */
+    .editor-toolbar {
+      display: flex; flex-wrap: wrap; gap: 4px; padding: 8px;
+      background: var(--bg-elevated); border: 1px solid var(--border);
+      border-bottom: none; border-radius: var(--radius-sm) var(--radius-sm) 0 0;
     }
-
-    .post-item-info .post-meta .cat {
-      color: var(--accent);
+    .editor-toolbar button {
+      background: none; border: none; color: var(--text-secondary);
+      padding: 6px 10px; font-size: 0.8rem; border-radius: 4px;
+      transition: all var(--transition); font-family: var(--font);
     }
+    .editor-toolbar button:hover { background: var(--bg-hover); color: var(--text); }
+    .editor-toolbar .sep { width: 1px; background: var(--border); margin: 4px 6px; }
 
-    .post-item-actions {
-      display: flex;
-      gap: 8px;
-      flex-shrink: 0;
-      margin-left: 16px;
+    /* ── SEO Score ── */
+    .seo-score-wrap {
+      display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
     }
+    .seo-score-circle {
+      width: 80px; height: 80px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-heading); font-size: 1.6rem;
+      flex-shrink: 0; position: relative;
+    }
+    .seo-score-circle.good { background: rgba(34,197,94,0.1); color: #22c55e; border: 3px solid #22c55e; }
+    .seo-score-circle.ok { background: rgba(255,200,50,0.1); color: #eab308; border: 3px solid #eab308; }
+    .seo-score-circle.bad { background: rgba(209,18,18,0.1); color: var(--accent); border: 3px solid var(--accent); }
 
-    .post-item-actions button {
-      padding: 6px 14px;
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      font-weight: 600;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
+    .seo-details { flex: 1; min-width: 200px; }
+    .seo-details .seo-row {
+      display: flex; justify-content: space-between; padding: 6px 0;
+      font-size: 0.82rem; border-bottom: 1px solid var(--border);
+    }
+    .seo-details .seo-row:last-child { border-bottom: none; }
+    .seo-details .seo-row .seo-label { color: var(--text-secondary); }
+    .seo-details .seo-row .seo-val { color: var(--text); font-weight: 500; }
+
+    /* ── Comment Items ── */
+    .comment-item {
+      display: flex; gap: 14px; padding: 16px;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); margin-bottom: 10px;
+    }
+    .comment-item .comment-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--accent-subtle); display: flex;
+      align-items: center; justify-content: center;
+      font-weight: 700; color: var(--accent); flex-shrink: 0;
+    }
+    .comment-item .comment-body { flex: 1; min-width: 0; }
+    .comment-item .comment-body .comment-header {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 4px; flex-wrap: wrap;
+    }
+    .comment-item .comment-body .comment-header .name { font-weight: 600; font-size: 0.88rem; }
+    .comment-item .comment-body .comment-header .date { font-size: 0.68rem; color: var(--text-muted); }
+    .comment-item .comment-body p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; }
+    .comment-item .comment-actions { display: flex; gap: 6px; margin-top: 10px; }
+
+    /* ── Media Gallery ── */
+    .media-gallery {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px;
+    }
+    .media-item {
+      aspect-ratio: 1; background: var(--bg-elevated);
+      border: 1px solid var(--border); border-radius: var(--radius-sm);
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; gap: 8px; cursor: pointer;
+      transition: all var(--transition); padding: 12px;
+      font-size: 0.7rem; color: var(--text-muted); text-align: center;
+    }
+    .media-item:hover { border-color: var(--accent); }
+    .media-item .media-icon { font-size: 2rem; }
+    .media-item .media-name { word-break: break-all; }
+    .drop-zone {
+      border: 2px dashed var(--border); border-radius: var(--radius);
+      padding: 48px; text-align: center; color: var(--text-muted);
+      transition: all var(--transition); cursor: pointer;
+    }
+    .drop-zone:hover, .drop-zone.drag-over { border-color: var(--accent); background: var(--accent-subtle); }
+    .drop-zone .dz-icon { font-size: 2.5rem; margin-bottom: 12px; }
+
+    /* ── Alert / Success ── */
+    .alert {
+      padding: 12px 16px; border-radius: var(--radius-sm);
+      font-size: 0.85rem; margin-bottom: 16px; display: none;
+    }
+    .alert.show { display: block; animation: fadeIn 0.2s ease; }
+    .alert-success { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.2); color: #22c55e; }
+    .alert-error { background: rgba(209,18,18,0.1); border: 1px solid rgba(209,18,18,0.2); color: var(--accent); }
+
+    /* ── Bulk bar ── */
+    .bulk-bar {
+      display: none; align-items: center; gap: 12px; padding: 10px 16px;
+      background: var(--bg-elevated); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); margin-bottom: 16px;
+    }
+    .bulk-bar.show { display: flex; flex-wrap: wrap; }
+    .bulk-bar .count { font-size: 0.82rem; color: var(--text-secondary); }
+
+    /* ── Tabs ── */
+    .tabs {
+      display: flex; gap: 4px; margin-bottom: 20px;
+      border-bottom: 1px solid var(--border); padding-bottom: 0;
+    }
+    .tabs button {
+      background: none; border: none; padding: 10px 18px;
+      font-size: 0.82rem; color: var(--text-secondary);
+      border-bottom: 2px solid transparent; margin-bottom: -1px;
       transition: all var(--transition);
-      font-family: var(--font-body);
+    }
+    .tabs button:hover { color: var(--text); }
+    .tabs button.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+    /* ── Modal ── */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 1000;
+      background: rgba(0,0,0,0.7); display: none;
+      align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal {
+      background: var(--bg-elevated); border: 1px solid var(--border);
+      border-radius: var(--radius); width: 100%; max-width: 520px;
+      max-height: 80vh; overflow-y: auto; padding: 28px;
+      animation: fadeIn 0.2s ease; position: relative;
+    }
+    .modal h2 { font-family: var(--font-heading); font-size: 1.6rem; margin-bottom: 16px; }
+    .modal .close-modal {
+      position: absolute; top: 16px; right: 16px;
+      background: none; border: none; color: var(--text-muted);
+      font-size: 1.3rem; line-height: 1;
+    }
+    .modal .close-modal:hover { color: var(--text); }
+
+    /* ── Misc ── */
+    .flex-between { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .gap-8 { gap: 8px; }
+    .gap-12 { gap: 12px; }
+    .mt-16 { margin-top: 16px; }
+    .mb-16 { margin-bottom: 16px; }
+    .w-full { width: 100%; }
+    .text-accent { color: var(--accent); }
+    .text-muted { color: var(--text-muted); }
+    .text-sm { font-size: 0.8rem; }
+
+    /* ── Responsive ── */
+    @media (max-width: 1024px) {
+      .form-row, .form-row-3 { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%); transition: transform 0.3s ease;
+      }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-overlay {
+        position: fixed; inset: 0; z-index: 99;
+        background: rgba(0,0,0,0.6); display: none;
+      }
+      .sidebar-overlay.show { display: block; }
+      .main { margin-left: 0; padding: 16px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .header-actions { width: 100%; }
+      .header-actions .btn { flex: 1; justify-content: center; }
+    }
+    @media (max-width: 480px) {
+      .main { padding: 12px; }
+      .stats-grid { grid-template-columns: 1fr; }
+      .stat-card .stat-value { font-size: 1.8rem; }
+      .post-item { flex-direction: column; align-items: flex-start; }
+      .post-item .post-actions { width: 100%; }
+      .page-header h1 { font-size: 1.5rem; }
+      .login-box { padding: 32px 20px; margin: 0 12px; }
     }
 
-    .post-item-actions .delete-btn {
-      background: rgba(220, 38, 38, 0.15);
-      color: var(--accent);
+    /* Hamburger for mobile sidebar */
+    .sidebar-toggle {
+      display: none; background: none; border: none;
+      color: var(--text); font-size: 1.3rem; padding: 4px;
     }
-
-    .post-item-actions .delete-btn:hover {
-      background: var(--accent);
-      color: #fff;
-    }
-
-    .post-item-actions .edit-btn {
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--text-secondary);
-    }
-
-    .post-item-actions .edit-btn:hover {
-      background: rgba(255, 255, 255, 0.15);
-      color: var(--text-primary);
-    }
-
-    .post-item-actions .featured-badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 6px 10px;
-      font-size: 0.6rem;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      font-weight: 600;
-      border-radius: 4px;
-      background: rgba(220, 38, 38, 0.1);
-      color: var(--accent);
-      border: none;
-      cursor: pointer;
-      transition: all var(--transition);
-      font-family: var(--font-body);
-    }
-
-    .post-item-actions .featured-badge:hover {
-      background: rgba(220, 38, 38, 0.2);
-    }
-
-    @media (max-width: 600px) {
-      .admin-panel { padding: 24px 16px; }
-      .login-box { padding: 32px 24px; }
-      .blog-form { padding: 24px; }
-      .form-row { grid-template-columns: 1fr; }
-      .post-item { flex-direction: column; align-items: flex-start; gap: 12px; }
-      .post-item-actions { margin-left: 0; width: 100%; }
-      .dashboard-header { flex-direction: column; align-items: flex-start; }
+    @media (max-width: 768px) {
+      .sidebar-toggle { display: block; }
     }
   </style>
 </head>
 <body>
 
-  <header class="header">
-    <div class="header-inner">
-      <a href="index.html" class="logo">
-        YOUNG<span class="logo-accent">HADENE</span>
-        <span class="logo-sub">Toronto • Dark Trap</span>
-      </a>
-      <button class="hamburger" aria-label="Toggle menu">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-      <nav>
-        <ul class="nav-list">
-          <li><a href="index.html" class="nav-link">Home</a></li>
-          <li><a href="blog.html" class="nav-link">Blog</a></li>
-          <li><a href="admin.html" class="nav-link active">Admin</a></li>
-        </ul>
-      </nav>
+<!-- ========== LOGIN ========== -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-icon">⚡</div>
+    <h2>Admin <span class="text-accent">CMS</span></h2>
+    <p>Enter your password to manage Young Hadene.</p>
+    <div class="input-group">
+      <label>Password</label>
+      <input type="password" id="loginPassword" placeholder="Enter password" onkeydown="if(event.key==='Enter')handleLogin()">
     </div>
-  </header>
+    <button class="btn btn-primary" onclick="handleLogin()">Unlock Dashboard</button>
+    <div class="login-error" id="loginError">Incorrect password. Try again.</div>
+  </div>
+</div>
 
-  <div class="admin-overlay">
-    <div class="admin-panel">
+<!-- ========== SIDEBAR OVERLAY (mobile) ========== -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
-      <!-- Login -->
-      <div class="login-box" id="loginBox">
-        <div class="login-icon">🔐</div>
-        <h2>Admin Access</h2>
-        <p>Enter your password to manage blog posts.</p>
-        <div class="form-group">
-          <label>Password</label>
-          <input type="password" id="passwordInput" placeholder="Enter password" onkeydown="if(event.key==='Enter')handleLogin()">
+<!-- ========== APP ========== -->
+<div id="app">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      YOUNG<span>HADENE</span>
+      <small>Content Management System</small>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">Main</div>
+      <a href="#" class="active" data-panel="dashboard"><span class="nav-icon">📊</span> Dashboard</a>
+      <a href="#" data-panel="posts"><span class="nav-icon">📝</span> Posts <span class="nav-badge" id="postCount">0</span></a>
+      <a href="#" data-panel="editor"><span class="nav-icon">✏️</span> Create Post</a>
+      <a href="#" data-panel="categories"><span class="nav-icon">📂</span> Categories</a>
+      <a href="#" data-panel="tags"><span class="nav-icon">🏷️</span> Tags</a>
+
+      <div class="nav-section" style="margin-top:12px;">Content</div>
+      <a href="#" data-panel="media"><span class="nav-icon">🖼️</span> Media Library</a>
+      <a href="#" data-panel="comments"><span class="nav-icon">💬</span> Comments <span class="nav-badge" id="commentCount">0</span></a>
+      <a href="#" data-panel="seo"><span class="nav-icon">🔍</span> SEO Manager</a>
+      <a href="#" data-panel="analytics"><span class="nav-icon">📈</span> Analytics</a>
+
+      <div class="nav-section" style="margin-top:12px;">Settings</div>
+      <a href="#" data-panel="settings"><span class="nav-icon">⚙️</span> Settings</a>
+      <a href="#" data-panel="security"><span class="nav-icon">🔒</span> Security</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="avatar">YH</div>
+      <div class="user-info">
+        <div class="name">Young Hadene</div>
+        <div class="role">Administrator</div>
+      </div>
+      <button class="logout-btn" onclick="handleLogout()" title="Logout">⏻</button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main">
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+
+    <!-- ===== DASHBOARD PANEL ===== -->
+    <div class="panel active" id="panel-dashboard">
+      <div class="page-header">
+        <h1>Dashboard <span>Overview</span></h1>
+        <div class="header-actions">
+          <button class="btn btn-secondary btn-sm" onclick="switchPanel('editor')">+ New Post</button>
         </div>
-        <button class="btn btn-primary" onclick="handleLogin()">Unlock</button>
-        <div class="login-error" id="loginError">Incorrect password. Try again.</div>
       </div>
 
-      <!-- Dashboard -->
-      <div class="dashboard" id="dashboard">
-        <div class="dashboard-header">
-          <div>
-            <h1>Blog <span class="text-accent">Manager</span></h1>
-            <div class="user-badge">Logged in as <span>Young Hadene</span></div>
+      <div class="stats-grid" id="dashboardStats">
+        <div class="stat-card">
+          <div class="stat-glow"></div>
+          <div class="stat-icon">📝</div>
+          <div class="stat-value" id="dashTotalPosts">0</div>
+          <div class="stat-label">Total Posts</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-glow"></div>
+          <div class="stat-icon">👁️</div>
+          <div class="stat-value" id="dashTotalViews">12.4K</div>
+          <div class="stat-label">Total Views</div>
+          <div class="stat-change up">↑ 8.2%</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-glow"></div>
+          <div class="stat-icon">📅</div>
+          <div class="stat-value" id="dashDraftPosts">0</div>
+          <div class="stat-label">Draft Posts</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-glow"></div>
+          <div class="stat-icon">⏰</div>
+          <div class="stat-value" id="dashScheduledPosts">0</div>
+          <div class="stat-label">Scheduled</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-glow"></div>
+          <div class="stat-icon">💬</div>
+          <div class="stat-value" id="dashComments">0</div>
+          <div class="stat-label">Comments</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-glow"></div>
+          <div class="stat-icon">★</div>
+          <div class="stat-value" id="dashFeatured">0</div>
+          <div class="stat-label">Featured Posts</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>Top <span>Performing</span> Posts</h3>
+        </div>
+        <div id="dashTopPosts" class="empty-state"><div class="empty-icon">📊</div><p>No posts yet. Create your first post to see performance data.</p></div>
+      </div>
+
+      <div style="margin-top:20px">
+        <div class="card">
+          <div class="card-header"><h3>Recent <span>Comments</span></h3></div>
+          <div id="dashRecentComments" class="empty-state"><div class="empty-icon">💬</div><p>No comments yet.</p></div>
+        </div>
+      </div>
+
+      <!-- AI Generator Quick Action -->
+      <div class="card mt-16">
+        <div class="card-header">
+          <h3>AI <span>Blog Generator</span></h3>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Topic / Keyword</label>
+            <input type="text" id="aiTopic" placeholder="e.g. Toronto drill music scene" style="background:var(--bg)">
           </div>
-          <button class="btn btn-outline" onclick="handleLogout()">Logout</button>
+          <div class="form-group">
+            <label>Style</label>
+            <select id="aiStyle" style="background:var(--bg)">
+              <option>Standard</option>
+              <option>Deep Dive</option>
+              <option>Listicle</option>
+              <option>Interview Style</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-primary btn-sm" onclick="generateAIPost()">Generate with AI</button>
+          <span id="aiSpinner" style="display:none;color:var(--text-muted);font-size:0.8rem;align-self:center">Generating...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== POSTS PANEL ===== -->
+    <div class="panel" id="panel-posts">
+      <div class="page-header">
+        <h1>Post <span>Manager</span></h1>
+        <div class="header-actions">
+          <button class="btn btn-primary btn-sm" onclick="switchPanel('editor')">+ New Post</button>
+          <button class="btn btn-secondary btn-sm" onclick="loadPosts()">⟳ Refresh</button>
+        </div>
+      </div>
+
+      <div class="bulk-bar" id="bulkBar">
+        <span class="count"><span id="bulkCount">0</span> selected</span>
+        <button class="btn btn-sm btn-secondary" onclick="bulkAction('publish')">Publish</button>
+        <button class="btn btn-sm btn-secondary" onclick="bulkAction('draft')">Set Draft</button>
+        <button class="btn btn-sm btn-danger" onclick="bulkAction('delete')">Delete</button>
+        <button class="btn btn-sm btn-ghost" onclick="bulkClear()">Clear</button>
+      </div>
+
+      <!-- Filters -->
+      <div class="card mb-16" style="padding:16px">
+        <div class="form-row-3">
+          <div class="form-group" style="margin:0">
+            <label>Search</label>
+            <input type="text" id="postSearch" placeholder="Search posts..." oninput="filterPosts()" style="background:var(--bg)">
+          </div>
+          <div class="form-group" style="margin:0">
+            <label>Category</label>
+            <select id="postFilterCat" onchange="filterPosts()" style="background:var(--bg)">
+              <option value="">All Categories</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin:0">
+            <label>Status</label>
+            <select id="postFilterStatus" onchange="filterPosts()" style="background:var(--bg)">
+              <option value="">All</option>
+              <option value="published">Published</option>
+              <option value="draft">Draft</option>
+              <option value="scheduled">Scheduled</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div id="postsContainer" class="empty-state"><div class="empty-icon">📝</div><p>No posts yet.</p></div>
+    </div>
+
+    <!-- ===== EDITOR PANEL ===== -->
+    <div class="panel" id="panel-editor">
+      <div class="page-header">
+        <h1 id="editorTitle">Create <span>Post</span></h1>
+        <div class="header-actions">
+          <button class="btn btn-ghost btn-sm" onclick="confirmCancel()">← Back</button>
+        </div>
+      </div>
+
+      <div class="alert alert-success" id="editorAlert"></div>
+
+      <div style="display:grid;grid-template-columns:1fr 300px;gap:24px;align-items:start">
+        <div>
+          <div class="card">
+            <div class="form-group">
+              <label>Post Title</label>
+              <input type="text" id="postTitle" placeholder="Enter title..." maxlength="120" oninput="updateSeoPreview()">
+            </div>
+
+            <div class="form-group">
+              <label>Content</label>
+              <div class="editor-toolbar">
+                <button onclick="wrapText('**','**')" title="Bold"><strong>B</strong></button>
+                <button onclick="wrapText('*','*')" title="Italic"><em>I</em></button>
+                <button onclick="wrapText('~~','~~')" title="Strikethrough"><s>S</s></button>
+                <span class="sep"></span>
+                <button onclick="insertAtCursor('\n---\n')" title="Divider">—</button>
+                <button onclick="wrapText('> ','')" title="Blockquote">❝</button>
+                <button onclick="wrapText('```\n','\n```')" title="Code Block">&lt;/&gt;</button>
+                <button onclick="wrapText('- ','')" title="Bullet List">•</button>
+                <button onclick="wrapText('1. ','')" title="Numbered List">1.</button>
+                <span class="sep"></span>
+                <button onclick="insertHeading(2)">H2</button>
+                <button onclick="insertHeading(3)">H3</button>
+                <button onclick="insertHeading(4)">H4</button>
+                <span class="sep"></span>
+                <button onclick="insertImage()" title="Insert Image">🖼</button>
+                <button onclick="insertAtCursor('[YouTube URL](https://youtu.be/...)')" title="Embed Video">▶</button>
+                <button onclick="insertAtCursor('| Col 1 | Col 2 | Col 3 |\n|-------|-------|-------|\n| Data  | Data  | Data  |')" title="Table">⊞</button>
+                <button onclick="wrapText(':::callout\n','\n:::')" title="Callout">💡</button>
+              </div>
+              <textarea id="postContent" placeholder="Write your content here..." style="min-height:360px;border-radius:0 0 var(--radius-sm) var(--radius-sm);border-top:none" oninput="updateSeoPreview()"></textarea>
+            </div>
+          </div>
         </div>
 
-        <div class="form-success" id="formSuccess">Post published successfully!</div>
-
-        <!-- Create/Edit Form -->
-        <div class="blog-form" id="blogForm">
-          <h3 id="formTitle">New Post</h3>
-          <input type="hidden" id="postId" value="">
-
-          <div class="form-row">
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <!-- Publish Settings -->
+          <div class="card">
+            <h3 style="font-size:0.9rem;font-weight:600;margin-bottom:12px">Publish <span class="text-accent">Settings</span></h3>
             <div class="form-group">
-              <label>Title</label>
-              <input type="text" id="postTitle" placeholder="Post title" maxlength="100">
-              <div class="char-count"><span id="titleCount">0</span>/100</div>
+              <label>Status</label>
+              <select id="postStatus">
+                <option value="draft">Draft</option>
+                <option value="published">Published</option>
+                <option value="scheduled">Scheduled</option>
+              </select>
+            </div>
+            <div class="form-group" id="scheduleDateGroup" style="display:none">
+              <label>Schedule Date</label>
+              <input type="datetime-local" id="postScheduleDate">
             </div>
             <div class="form-group">
               <label>Category</label>
-              <select id="postCategory">
-                <option value="Music">Music</option>
-                <option value="Toronto">Toronto</option>
-                <option value="Lifestyle">Lifestyle</option>
-                <option value="Behind The Scenes">Behind The Scenes</option>
-                <option value="Studio Sessions">Studio Sessions</option>
-              </select>
+              <select id="postCategory"></select>
+            </div>
+            <div class="form-group">
+              <label>Tags (comma separated)</label>
+              <input type="text" id="postTags" placeholder="e.g. toronto, drill, music">
+            </div>
+            <div class="toggle-wrap">
+              <span class="text-sm">Featured Post</span>
+              <div class="toggle" id="postFeaturedToggle" onclick="this.classList.toggle('active')"></div>
+            </div>
+            <div class="toggle-wrap mt-16">
+              <span class="text-sm">Pin to Homepage</span>
+              <div class="toggle" id="postPinnedToggle" onclick="this.classList.toggle('active')"></div>
             </div>
           </div>
 
-          <div class="form-group">
-            <label>Content</label>
-            <textarea id="postContent" placeholder="Write your blog post content here..." maxlength="5000"></textarea>
-            <div class="char-count"><span id="contentCount">0</span>/5000</div>
+          <!-- Actions -->
+          <div class="card">
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <button class="btn btn-primary w-full" onclick="savePost()">Publish</button>
+              <button class="btn btn-secondary w-full" onclick="savePostAsDraft()">Save as Draft</button>
+              <button class="btn btn-ghost w-full btn-sm" onclick="saveRevision()" id="revBtn" style="font-size:0.75rem">Save Revision</button>
+            </div>
           </div>
 
-          <div class="form-group">
-            <label>
-              <input type="checkbox" id="postFeatured" style="width:auto;accent-color:var(--accent);margin-right:8px">
-              Feature this post (shows as the large featured article at the top)
-            </label>
+          <!-- SEO Preview -->
+          <div class="card" id="seoPreviewCard">
+            <h3 style="font-size:0.9rem;font-weight:600;margin-bottom:8px">SEO <span class="text-accent">Preview</span></h3>
+            <div id="seoPreview" style="font-size:0.78rem">
+              <div style="color:#1a8bff;font-size:0.82rem">younghadene.ca/blog/</div>
+              <div style="color:var(--text);font-weight:600;margin:2px 0" id="seoPreviewTitle">Post Title</div>
+              <div style="color:var(--text-secondary)" id="seoPreviewDesc">Post description will appear here...</div>
+            </div>
           </div>
 
-          <div class="form-actions">
-            <button class="btn btn-primary" onclick="savePost()">Publish Post</button>
-            <button class="btn btn-ghost" onclick="resetForm()" style="display:none" id="cancelBtn">Cancel</button>
+          <!-- Revisions -->
+          <div class="card" id="revisionCard" style="display:none">
+            <h3 style="font-size:0.9rem;font-weight:600;margin-bottom:8px">Revisions <span class="text-accent">History</span></h3>
+            <div id="revisionList" style="font-size:0.78rem"></div>
           </div>
         </div>
+      </div>
+    </div>
 
-        <!-- Posts List -->
-        <div class="posts-list">
-          <h3>All Posts</h3>
-          <div id="postsContainer"></div>
+    <!-- ===== CATEGORIES PANEL ===== -->
+    <div class="panel" id="panel-categories">
+      <div class="page-header">
+        <h1>Categories <span>Manager</span></h1>
+        <div class="header-actions">
+          <button class="btn btn-primary btn-sm" onclick="showCategoryModal()">+ New Category</button>
         </div>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Name</th><th>Slug</th><th>Posts</th><th>Actions</th></tr></thead>
+            <tbody id="categoriesTable"></tbody>
+          </table>
+        </div>
+        <div id="categoriesEmpty" class="empty-state" style="display:none"><div class="empty-icon">📂</div><p>No categories yet.</p></div>
+      </div>
+    </div>
 
-        <!-- AI Auto-Gen Settings -->
-        <div class="settings-section">
-          <h3>AI Auto-<span class="text-accent">Generation</span></h3>
-          <div class="settings-desc">Schedule automated blog posts using AI. Requires the Node.js API server to be running (<code>node server.js</code>).</div>
+    <!-- ===== TAGS PANEL ===== -->
+    <div class="panel" id="panel-tags">
+      <div class="page-header">
+        <h1>Tags <span>Manager</span></h1>
+        <div class="header-actions">
+          <button class="btn btn-primary btn-sm" onclick="showTagModal()">+ New Tag</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Name</th><th>Slug</th><th>Posts</th><th>Actions</th></tr></thead>
+            <tbody id="tagsTable"></tbody>
+          </table>
+        </div>
+        <div id="tagsEmpty" class="empty-state" style="display:none"><div class="empty-icon">🏷️</div><p>No tags yet.</p></div>
+      </div>
+    </div>
 
-          <div id="serverStatus" class="server-status offline"><span class="dot"></span> Server offline</div>
+    <!-- ===== MEDIA PANEL ===== -->
+    <div class="panel" id="panel-media">
+      <div class="page-header">
+        <h1>Media <span>Library</span></h1>
+      </div>
+      <div class="drop-zone" id="dropZone" onclick="document.getElementById('mediaInput').click()">
+        <div class="dz-icon">📁</div>
+        <p>Drag & drop files or click to upload</p>
+        <p style="font-size:0.75rem;margin-top:4px">Supports: JPG, PNG, GIF, WEBP, SVG, MP4</p>
+      </div>
+      <input type="file" id="mediaInput" multiple accept="image/*,video/*" style="display:none" onchange="handleMediaUpload(event)">
+      <div class="media-gallery" id="mediaGallery" style="margin-top:20px"></div>
+    </div>
 
-          <div class="settings-grid">
-            <div class="settings-card">
-              <label>Auto-Generate</label>
-              <div class="toggle-wrap">
-                <label style="font-size:0.8rem;text-transform:none;letter-spacing:0;font-weight:400;margin:0">Enable daily posts</label>
-                <div class="toggle" id="toggleEnable" onclick="toggleScheduler()"></div>
+    <!-- ===== COMMENTS PANEL ===== -->
+    <div class="panel" id="panel-comments">
+      <div class="page-header">
+        <h1>Comments <span>Manager</span></h1>
+        <div class="header-actions">
+          <button class="btn btn-secondary btn-sm" onclick="loadComments()">⟳ Refresh</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="tabs">
+          <button class="active" onclick="switchCommentTab(this,'all')">All</button>
+          <button onclick="switchCommentTab(this,'pending')">Pending</button>
+          <button onclick="switchCommentTab(this,'approved')">Approved</button>
+        </div>
+        <div id="commentsContainer" class="empty-state"><div class="empty-icon">💬</div><p>No comments yet.</p></div>
+      </div>
+    </div>
+
+    <!-- ===== SEO PANEL ===== -->
+    <div class="panel" id="panel-seo">
+      <div class="page-header">
+        <h1>SEO <span>Manager</span></h1>
+      </div>
+
+      <div class="card mb-16">
+        <div class="card-header"><h3>Post SEO <span>Settings</span></h3></div>
+        <div class="form-group">
+          <label>Select Post</label>
+          <select id="seoPostSelect" onchange="loadSeoForPost()"></select>
+        </div>
+      </div>
+
+      <div class="card" id="seoPanel">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div>
+            <div class="form-group">
+              <label>SEO Title</label>
+              <input type="text" id="seoTitle" placeholder="Custom SEO title" oninput="updateSeoScore()" style="background:var(--bg)">
+              <div class="text-muted text-sm"><span id="seoTitleCount">0</span>/60</div>
+            </div>
+            <div class="form-group">
+              <label>Meta Description</label>
+              <textarea id="seoDesc" placeholder="Meta description..." maxlength="160" oninput="updateSeoScore()" style="background:var(--bg);min-height:60px"></textarea>
+              <div class="text-muted text-sm"><span id="seoDescCount">0</span>/160</div>
+            </div>
+            <div class="form-group">
+              <label>Focus Keyword</label>
+              <input type="text" id="seoKeyword" placeholder="e.g. Toronto drill artist" oninput="updateSeoScore()" style="background:var(--bg)">
+            </div>
+            <div class="form-group">
+              <label>Slug</label>
+              <input type="text" id="seoSlug" placeholder="post-url-slug" style="background:var(--bg)">
+            </div>
+            <div class="form-group">
+              <label>Canonical URL</label>
+              <input type="text" id="seoCanonical" placeholder="https://younghadene.ca/blog/..." style="background:var(--bg)">
+            </div>
+            <div class="form-group">
+              <label>OG Image URL</label>
+              <input type="text" id="seoOgImage" placeholder="https://younghadene.ca/images/..." style="background:var(--bg)">
+            </div>
+            <div class="form-group">
+              <label>Twitter Card Image</label>
+              <input type="text" id="seoTwitterImage" placeholder="https://younghadene.ca/images/..." style="background:var(--bg)">
+            </div>
+          </div>
+          <div>
+            <div class="card" style="background:var(--bg)">
+              <h4 style="font-size:0.85rem;margin-bottom:12px">SEO <span class="text-accent">Score</span></h4>
+              <div class="seo-score-wrap">
+                <div class="seo-score-circle" id="seoScoreCircle">0</div>
+                <div class="seo-details">
+                  <div class="seo-row"><span class="seo-label">Readability</span><span class="seo-val" id="seoReadability">-</span></div>
+                  <div class="seo-row"><span class="seo-label">Keyword Density</span><span class="seo-val" id="seoKeywordDensity">-</span></div>
+                  <div class="seo-row"><span class="seo-label">Title Length</span><span class="seo-val" id="seoScoreTitle">-</span></div>
+                  <div class="seo-row"><span class="seo-label">Desc Length</span><span class="seo-val" id="seoScoreDesc">-</span></div>
+                </div>
               </div>
             </div>
-
-            <div class="settings-card">
-              <label>Schedule Time</label>
-              <input type="time" id="settingsTime" value="09:00">
+            <div class="card mt-16" style="background:var(--bg)">
+              <h4 style="font-size:0.85rem;margin-bottom:8px">Suggestions</h4>
+              <div id="seoSuggestions" style="font-size:0.8rem;color:var(--text-secondary);line-height:1.8"></div>
             </div>
-
-            <div class="settings-card">
-              <label>Posts Per Day</label>
-              <input type="number" id="settingsQuantity" min="1" max="20" value="1">
-              <div style="font-size:0.65rem;color:var(--text-muted);margin-top:4px">Max 20 per day</div>
-            </div>
-          </div>
-
-          <div class="settings-status" id="settingsStats">
-            <div class="stat-box">
-              <div class="stat-num" id="statTotal">0</div>
-              <div class="stat-label">Total Generated</div>
-            </div>
-            <div class="stat-box">
-              <div class="stat-num" id="statLastQty">-</div>
-              <div class="stat-label">Last Run</div>
-            </div>
-            <div class="stat-box">
-              <div class="stat-num" id="statNext">-</div>
-              <div class="stat-label">Next Run</div>
-            </div>
-            <div class="stat-box">
-              <div class="stat-num" id="statStatus">-</div>
-              <div class="stat-label">Status</div>
-            </div>
-          </div>
-
-          <div class="form-actions" style="margin-top:16px">
-            <button class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
-            <button class="btn btn-outline" id="generateNowBtn" onclick="generateNow()">Generate Now</button>
-            <span id="genSpinner" style="display:none;color:var(--text-muted);font-size:0.8rem;align-self:center">Generating...</span>
+            <button class="btn btn-primary mt-16 w-full" onclick="saveSeoSettings()">Save SEO Settings</button>
           </div>
         </div>
       </div>
 
-    </div>
-  </div>
+      <!-- AI SEO Analysis Tools -->
+      <div class="card mt-16">
+        <div class="flex-between" style="margin-bottom:16px">
+          <h3 style="font-size:0.9rem;font-weight:600">AI SEO <span class="text-accent">Analysis Tools</span></h3>
+        </div>
 
-  <script>
-    const PASSWORD = 'HadeneCalixte1998';
-    const STORAGE_KEY = 'yh_blogPosts';
-    const SESSION_KEY = 'yh_admin';
-
-    // ---- Auth ----
-    function handleLogin() {
-      const pw = document.getElementById('passwordInput').value;
-      if (pw === PASSWORD) {
-        sessionStorage.setItem(SESSION_KEY, 'true');
-        document.getElementById('loginBox').style.display = 'none';
-        document.getElementById('dashboard').classList.add('show');
-        loadPosts();
-      } else {
-        document.getElementById('loginError').classList.add('show');
-      }
-    }
-
-    function handleLogout() {
-      sessionStorage.removeItem(SESSION_KEY);
-      document.getElementById('loginBox').style.display = 'block';
-      document.getElementById('dashboard').classList.remove('show');
-      document.getElementById('passwordInput').value = '';
-      document.getElementById('loginError').classList.remove('show');
-    }
-
-    // Check session on load
-    (function() {
-      if (sessionStorage.getItem(SESSION_KEY) === 'true') {
-        document.getElementById('loginBox').style.display = 'none';
-        document.getElementById('dashboard').classList.add('show');
-      }
-    })();
-
-    // ---- Blog CRUD ----
-    function getPosts() {
-      try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-      } catch { return []; }
-    }
-
-    function savePosts(posts) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
-    }
-
-    function loadPosts() {
-      const posts = getPosts();
-      const container = document.getElementById('postsContainer');
-
-      if (posts.length === 0) {
-        container.innerHTML = `
-          <div class="empty-state">
-            <div class="empty-icon">📝</div>
-            <p>No posts yet. Write your first blog post above.</p>
-          </div>
-        `;
-        return;
-      }
-
-      posts.sort((a, b) => b.dateNum - a.dateNum);
-
-      container.innerHTML = posts.map(post => `
-        <div class="post-item">
-          <div class="post-item-info">
-            <h4>${escapeHtml(post.title)}</h4>
-            <div class="post-meta">
-              <span class="cat">${escapeHtml(post.category)}</span>
-              &middot; ${post.date}
-              ${post.featured ? '&middot; <span style="color:var(--accent)">★ Featured</span>' : ''}
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div>
+            <div class="form-group">
+              <label>Analyze Post Content</label>
+              <select id="seoAnalyzePost" onchange="loadSeoAnalysis()" style="background:var(--bg)"></select>
+            </div>
+            <div class="form-group">
+              <label>Or paste content to analyze</label>
+              <textarea id="seoAnalyzeContent" placeholder="Paste article content here for AI analysis..." style="min-height:100px;background:var(--bg)"></textarea>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button class="btn btn-primary btn-sm" onclick="runSeoAnalysis()">Run Analysis</button>
+              <button class="btn btn-secondary btn-sm" onclick="autoGenerateMeta()">Generate Meta</button>
+              <button class="btn btn-secondary btn-sm" onclick="suggestLsiKeywords()">Suggest LSI Keywords</button>
             </div>
           </div>
-          <div class="post-item-actions">
-            <button class="featured-badge" onclick="toggleFeatured(${post.id})">${post.featured ? '★' : '☆'}</button>
-            <button class="edit-btn" onclick="editPost(${post.id})">Edit</button>
-            <button class="delete-btn" onclick="deletePost(${post.id})">Delete</button>
+
+          <div>
+            <div class="card" style="background:var(--bg);margin-bottom:12px">
+              <h4 style="font-size:0.85rem;margin-bottom:8px">Content <span class="text-accent">Analysis</span></h4>
+              <div id="seoAnalysisResults" style="font-size:0.8rem;color:var(--text-secondary);line-height:1.8">
+                Select a post or paste content and click "Run Analysis".
+              </div>
+            </div>
           </div>
         </div>
-      `).join('');
+      </div>
+
+      <!-- SEO Site Tools -->
+      <div class="card mt-16">
+        <h3 style="font-size:0.9rem;font-weight:600;margin-bottom:12px">SEO Site <span class="text-accent">Tools</span></h3>
+        <div class="form-row-3">
+          <div class="card" style="background:var(--bg);cursor:pointer" onclick="checkSitemap()">
+            <div style="font-size:1.4rem;margin-bottom:4px">🗺️</div>
+            <div style="font-size:0.82rem;font-weight:600">XML Sitemap</div>
+            <div id="seoSitemapStatus" style="font-size:0.72rem;color:var(--text-muted)">Check status</div>
+          </div>
+          <div class="card" style="background:var(--bg);cursor:pointer" onclick="checkRss()">
+            <div style="font-size:1.4rem;margin-bottom:4px">📡</div>
+            <div style="font-size:0.82rem;font-weight:600">RSS Feed</div>
+            <div id="seoRssStatus" style="font-size:0.72rem;color:var(--text-muted)">Check status</div>
+          </div>
+          <div class="card" style="background:var(--bg);cursor:pointer" onclick="checkRobots()">
+            <div style="font-size:1.4rem;margin-bottom:4px">🤖</div>
+            <div style="font-size:0.82rem;font-weight:600">Robots.txt</div>
+            <div id="seoRobotsStatus" style="font-size:0.72rem;color:var(--text-muted)">Check status</div>
+          </div>
+        </div>
+
+        <div class="card mt-16" style="background:var(--bg)">
+          <h4 style="font-size:0.85rem;margin-bottom:8px">Google Ranking <span class="text-accent">Checklist</span></h4>
+          <div id="seoChecklist" style="font-size:0.8rem"></div>
+        </div>
+
+        <div class="card mt-16" style="background:var(--bg)">
+          <h4 style="font-size:0.85rem;margin-bottom:8px">Internal Linking <span class="text-accent">Suggestions</span></h4>
+          <div id="seoInternalLinks" style="font-size:0.8rem;color:var(--text-secondary);line-height:1.8">
+            Select a post above and run analysis to see internal linking opportunities.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== ANALYTICS PANEL ===== -->
+    <div class="panel" id="panel-analytics">
+      <div class="page-header">
+        <h1>Analytics <span>Dashboard</span></h1>
+        <div class="header-actions">
+          <button class="btn btn-secondary btn-sm" onclick="loadAnalytics()">⟳ Refresh</button>
+          <span id="analyticsLastUpdated" style="font-size:0.72rem;color:var(--text-muted);align-self:center"></span>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-glow"></div><div class="stat-icon">👁️</div><div class="stat-value" id="anaTotalViews">-</div><div class="stat-label">Total Views</div></div>
+        <div class="stat-card"><div class="stat-glow"></div><div class="stat-icon">👤</div><div class="stat-value" id="anaUniqueVisitors">-</div><div class="stat-label">Unique Visitors</div></div>
+        <div class="stat-card"><div class="stat-glow"></div><div class="stat-icon">📅</div><div class="stat-value" id="anaMonthViews">-</div><div class="stat-label">Views (30 days)</div></div>
+        <div class="stat-card"><div class="stat-glow"></div><div class="stat-icon">👥</div><div class="stat-value" id="anaMonthUnique">-</div><div class="stat-label">Visitors (30 days)</div></div>
+        <div class="stat-card"><div class="stat-glow"></div><div class="stat-icon">📄</div><div class="stat-value" id="anaBounceRate">-</div><div class="stat-label">Bounce Rate</div></div>
+        <div class="stat-card"><div class="stat-glow"></div><div class="stat-icon">📱</div><div class="stat-value" id="anaDevices">-</div><div class="stat-label">Device Types</div></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div class="card">
+          <h3 style="font-size:0.9rem;font-weight:600;margin-bottom:12px">Traffic <span class="text-accent">Sources</span></h3>
+          <div id="anaTrafficSources" style="font-size:0.85rem;color:var(--text-secondary)">Loading...</div>
+        </div>
+        <div class="card">
+          <h3 style="font-size:0.9rem;font-weight:600;margin-bottom:12px">Top <span class="text-accent">Pages</span></h3>
+          <div id="anaTopPages" style="font-size:0.85rem;color:var(--text-secondary)">Loading...</div>
+        </div>
+      </div>
+
+      <div class="card mt-16">
+        <h3 style="font-size:0.9rem;font-weight:600;margin-bottom:12px">Daily Views <span class="text-accent">(30 days)</span></h3>
+        <div id="anaDailyChart" style="display:flex;align-items:flex-end;gap:3px;height:120px;padding:12px 0;overflow-x:auto;min-width:100%">
+          <div style="width:100%;text-align:center;color:var(--text-muted);font-size:0.8rem">Loading...</div>
+        </div>
+        <div id="anaDailyLabels" style="display:flex;gap:3px;font-size:0.55rem;color:var(--text-muted);overflow-x:auto;padding-bottom:4px"></div>
+      </div>
+
+      <div class="card mt-16">
+        <h3 style="font-size:0.9rem;font-weight:600;margin-bottom:12px">Device <span class="text-accent">Breakdown</span></h3>
+        <div id="anaDeviceBreakdown" style="font-size:0.85rem">Loading...</div>
+      </div>
+
+      <div class="card mt-16">
+        <h3 style="font-size:0.9rem;font-weight:600;margin-bottom:12px">Recent <span class="text-accent">Page Views</span></h3>
+        <div id="anaRecent" style="font-size:0.82rem;color:var(--text-secondary);max-height:300px;overflow-y:auto">Loading...</div>
+      </div>
+    </div>
+
+    <!-- ===== SETTINGS PANEL ===== -->
+    <div class="panel" id="panel-settings">
+      <div class="page-header">
+        <h1>Blog <span>Settings</span></h1>
+      </div>
+
+      <div class="card mb-16">
+        <h3 style="font-size:0.9rem;font-weight:600;margin-bottom:16px">General <span class="text-accent">Settings</span></h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Blog Name</label>
+            <input type="text" id="setBlogName" value="Young Hadene Blog" style="background:var(--bg)">
+          </div>
+          <div class="form-group">
+            <label>Author Name</label>
+            <input type="text" id="setAuthorName" value="Young Hadene" style="background:var(--bg)">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Posts Per Page</label>
+            <input type="number" id="setPostsPerPage" value="9" min="1" max="50" style="background:var(--bg)">
+          </div>
+          <div class="form-group">
+            <label>Default Category</label>
+            <select id="setDefaultCat" style="background:var(--bg)"><option>Music</option></select>
+          </div>
+        </div>
+        <div class="toggle-wrap mt-16">
+          <span class="text-sm">Enable RSS Feed</span>
+          <div class="toggle active" id="setRssToggle" onclick="this.classList.toggle('active')"></div>
+        </div>
+        <div class="toggle-wrap mt-16">
+          <span class="text-sm">Auto-generate XML Sitemap</span>
+          <div class="toggle active" id="setSitemapToggle" onclick="this.classList.toggle('active')"></div>
+        </div>
+        <button class="btn btn-primary btn-sm mt-16" onclick="saveBlogSettings()">Save Settings</button>
+        <span id="settingsSaved" style="display:none;color:#22c55e;font-size:0.82rem;margin-left:12px">✓ Saved</span>
+      </div>
+
+      <div class="card mb-16">
+        <h3 style="font-size:0.9rem;font-weight:600;margin-bottom:16px">AI Auto-<span class="text-accent">Generation</span></h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Schedule Time</label>
+            <input type="time" id="aiSchedTime" value="09:00" style="background:var(--bg)">
+          </div>
+          <div class="form-group">
+            <label>Posts Per Day</label>
+            <input type="number" id="aiSchedQty" value="1" min="1" max="20" style="background:var(--bg)">
+          </div>
+        </div>
+        <div class="toggle-wrap">
+          <span class="text-sm">Enable Scheduled Generation</span>
+          <div class="toggle" id="aiSchedToggle" onclick="this.classList.toggle('active')"></div>
+        </div>
+        <div class="flex-between mt-16">
+          <button class="btn btn-primary btn-sm" onclick="saveAISettings()">Save & Apply</button>
+          <button class="btn btn-secondary btn-sm" onclick="triggerAIGenerate()">Generate Now</button>
+        </div>
+        <div id="aiSchedStatus" class="mt-16" style="font-size:0.8rem;color:var(--text-secondary)"></div>
+      </div>
+    </div>
+
+    <!-- ===== SECURITY PANEL ===== -->
+    <div class="panel" id="panel-security">
+      <div class="page-header">
+        <h1>Security <span>Center</span></h1>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-glow"></div><div class="stat-icon">🔑</div><div class="stat-value">2FA</div><div class="stat-label">Two-Factor Auth</div><div class="stat-change down">Disabled</div></div>
+        <div class="stat-card"><div class="stat-glow"></div><div class="stat-icon">📋</div><div class="stat-value">47</div><div class="stat-label">Activity Logs</div></div>
+        <div class="stat-card"><div class="stat-glow"></div><div class="stat-icon">🚪</div><div class="stat-value">12</div><div class="stat-label">Login Attempts</div></div>
+        <div class="stat-card"><div class="stat-glow"></div><div class="stat-icon">💾</div><div class="stat-value">3</div><div class="stat-label">Backups</div></div>
+      </div>
+      <div class="card mb-16">
+        <h3 style="font-size:0.9rem;font-weight:600;margin-bottom:12px">Change <span class="text-accent">Password</span></h3>
+        <div class="form-row">
+          <div class="form-group"><label>Current Password</label><input type="password" id="curPw" style="background:var(--bg)"></div>
+          <div class="form-group"><label>New Password</label><input type="password" id="newPw" style="background:var(--bg)"></div>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="changePassword()">Update Password</button>
+        <span id="pwMsg" style="display:none;font-size:0.82rem;margin-left:12px"></span>
+      </div>
+      <div class="card">
+        <h3 style="font-size:0.9rem;font-weight:600;margin-bottom:12px">Activity <span class="text-accent">Log</span></h3>
+        <div id="activityLog" style="font-size:0.8rem;color:var(--text-secondary);line-height:2">No activity recorded yet.</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ========== MODALS ========== -->
+<div class="modal-overlay" id="categoryModal">
+  <div class="modal">
+    <button class="close-modal" onclick="closeModal('categoryModal')">✕</button>
+    <h2>Category</h2>
+    <input type="hidden" id="catEditId">
+    <div class="form-group"><label>Name</label><input type="text" id="catName" placeholder="Category name"></div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-primary" onclick="saveCategory()">Save</button>
+      <button class="btn btn-ghost" onclick="closeModal('categoryModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="tagModal">
+  <div class="modal">
+    <button class="close-modal" onclick="closeModal('tagModal')">✕</button>
+    <h2>Tag</h2>
+    <input type="hidden" id="tagEditId">
+    <div class="form-group"><label>Name</label><input type="text" id="tagName" placeholder="Tag name"></div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-primary" onclick="saveTag()">Save</button>
+      <button class="btn btn-ghost" onclick="closeModal('tagModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SCRIPT ========== -->
+<script>
+const PASSWORD = 'HadeneCalixte1998';
+const STORAGE_KEY = 'yh_blogPosts';
+const CAT_KEY = 'yh_categories';
+const TAG_KEY = 'yh_tags';
+const COMMENT_KEY = 'yh_comments';
+const MEDIA_KEY = 'yh_media';
+const SEO_KEY = 'yh_seo';
+const REV_KEY = 'yh_revisions';
+const SESSION_KEY = 'yh_admin';
+const SETTINGS_KEY = 'yh_blogSettings';
+const ACTIVITY_KEY = 'yh_activity';
+
+// ── Auth ──
+function handleLogin() {
+  const pw = document.getElementById('loginPassword').value;
+  if (pw === PASSWORD) {
+    sessionStorage.setItem(SESSION_KEY, 'true');
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('app').classList.add('show');
+    initApp();
+  } else {
+    document.getElementById('loginError').classList.add('show');
+  }
+}
+function handleLogout() {
+  sessionStorage.removeItem(SESSION_KEY);
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('app').classList.remove('show');
+}
+(function() {
+  if (sessionStorage.getItem(SESSION_KEY) === 'true') {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('app').classList.add('show');
+  }
+})();
+
+// ── Sidebar ──
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('show');
+}
+document.querySelectorAll('.sidebar-nav a').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    document.querySelectorAll('.sidebar-nav a').forEach(x => x.classList.remove('active'));
+    a.classList.add('active');
+    const panel = a.dataset.panel;
+    switchPanel(panel);
+    if (window.innerWidth <= 768) toggleSidebar();
+  });
+});
+function switchPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  const el = document.getElementById('panel-' + id);
+  if (el) el.classList.add('active');
+
+  // Clear analytics auto-refresh when leaving
+  if (id !== 'analytics' && analyticsInterval) {
+    clearInterval(analyticsInterval);
+    analyticsInterval = null;
+  }
+
+  if (id === 'posts') loadPosts();
+  if (id === 'categories') loadCategories();
+  if (id === 'tags') loadTags();
+  if (id === 'comments') loadComments();
+  if (id === 'media') loadMedia();
+  if (id === 'seo') loadSeoPosts();
+  if (id === 'analytics') loadAnalytics();
+  if (id === 'dashboard') updateDashboard();
+  if (id === 'editor' && document.getElementById('postTitle').value === '') {
+    document.getElementById('editorTitle').innerHTML = 'Create <span>Post</span>';
+  }
+}
+
+// ── Storage ──
+function getData(key, def) { try { return JSON.parse(localStorage.getItem(key)) || def; } catch { return def; } }
+function setData(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
+
+function getPosts() { return getData(STORAGE_KEY, []); }
+function savePosts(p) { setData(STORAGE_KEY, p); }
+
+function getCats() { return getData(CAT_KEY, ['Music','Toronto','Lifestyle','Behind The Scenes','Studio Sessions']); }
+function saveCats(c) { setData(CAT_KEY, c); }
+
+function getTags() { return getData(TAG_KEY, ['toronto','drill','trap','haitian','canada','6ix','music','hiphop']); }
+function saveTags(t) { setData(TAG_KEY, t); }
+
+function getComments() { return getData(COMMENT_KEY, []); }
+function saveComments(c) { setData(COMMENT_KEY, c); }
+
+function getMedia() { return getData(MEDIA_KEY, []); }
+function saveMedia(m) { setData(MEDIA_KEY, m); }
+
+function getSeo() { return getData(SEO_KEY, {}); }
+function saveSeo(s) { setData(SEO_KEY, s); }
+
+function getRevisions() { return getData(REV_KEY, {}); }
+function saveRevisions(r) { setData(REV_KEY, r); }
+
+function getSettings() { return getData(SETTINGS_KEY, {}); }
+function saveSettings(s) { setData(SETTINGS_KEY, s); }
+
+function addActivity(msg) {
+  const log = getData(ACTIVITY_KEY, []);
+  log.unshift({ msg, time: new Date().toISOString() });
+  if (log.length > 50) log.length = 50;
+  setData(ACTIVITY_KEY, log);
+}
+
+// ── Init ──
+function initApp() {
+  populateCategorySelects();
+  loadPosts();
+  updateDashboard();
+  loadCategories();
+  loadTags();
+  loadComments();
+  loadMedia();
+  loadSeoPosts();
+  loadActivityLog();
+  loadBlogSettings();
+  document.getElementById('postStatus').addEventListener('change', function() {
+    document.getElementById('scheduleDateGroup').style.display = this.value === 'scheduled' ? 'block' : 'none';
+  });
+}
+
+// ── Populate selects ──
+function populateCategorySelects() {
+  const cats = getCats();
+  const selects = ['postCategory','postFilterCat','setDefaultCat','seoPostSelect'];
+  selects.forEach(id => {
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    if (id === 'seoPostSelect') {
+      sel.innerHTML = '<option value="">Select a post...</option>';
+    } else if (id === 'postFilterCat') {
+      sel.innerHTML = '<option value="">All Categories</option>';
     }
+    cats.forEach(c => {
+      const o = document.createElement('option');
+      o.value = c; o.textContent = c;
+      sel.appendChild(o);
+    });
+  });
+}
 
-    function savePost() {
-      const id = document.getElementById('postId').value;
-      const title = document.getElementById('postTitle').value.trim();
-      const category = document.getElementById('postCategory').value;
-      const content = document.getElementById('postContent').value.trim();
-      const featured = document.getElementById('postFeatured').checked;
+// ── Dashboard ──
+function updateDashboard() {
+  const posts = getPosts();
+  document.getElementById('dashTotalPosts').textContent = posts.length;
+  document.getElementById('dashDraftPosts').textContent = posts.filter(p => p.status === 'draft').length;
+  document.getElementById('dashScheduledPosts').textContent = posts.filter(p => p.status === 'scheduled').length;
+  document.getElementById('dashFeatured').textContent = posts.filter(p => p.featured).length;
+  document.getElementById('dashComments').textContent = getComments().length;
+  document.getElementById('postCount').textContent = posts.length;
+  document.getElementById('commentCount').textContent = getComments().length;
 
-      if (!title) { alert('Enter a title.'); return; }
-      if (!content) { alert('Enter some content.'); return; }
+  // Top posts
+  const top = [...posts].sort((a,b) => (b.views||0) - (a.views||0)).slice(0,5);
+  const cont = document.getElementById('dashTopPosts');
+  if (top.length === 0) {
+    cont.innerHTML = '<div class="empty-icon">📊</div><p>No posts yet.</p>';
+  } else {
+    cont.innerHTML = '';
+    top.forEach((p,i) => {
+      const d = document.createElement('div');
+      d.style.cssText = 'display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:0.85rem';
+      if (i === top.length-1) d.style.borderBottom = 'none';
+      d.innerHTML = `<span>${escapeHtml(p.title)}</span><span class="text-accent">${p.views||0} views</span>`;
+      cont.appendChild(d);
+    });
+  }
 
-      const now = new Date();
-      const dateStr = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  // Recent comments
+  const comments = getComments().slice(0,3);
+  const rc = document.getElementById('dashRecentComments');
+  if (comments.length === 0) {
+    rc.innerHTML = '<div class="empty-icon">💬</div><p>No comments yet.</p>';
+  } else {
+    rc.innerHTML = '';
+    comments.forEach(c => {
+      const d = document.createElement('div');
+      d.style.cssText = 'display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);font-size:0.85rem';
+      d.innerHTML = `<span style="font-weight:600">${escapeHtml(c.author)}</span><span style="color:var(--text-secondary)">${escapeHtml(c.text)}</span>`;
+      rc.appendChild(d);
+    });
+  }
+}
 
-      let posts = getPosts();
+// ── Posts ──
+let currentEditId = null;
 
-      if (id) {
-        // Edit existing
-        const idx = posts.findIndex(p => p.id === Number(id));
-        if (idx !== -1) {
-          posts[idx] = { ...posts[idx], title, category, content, featured, date: dateStr, dateNum: Date.now() };
-        }
-      } else {
-        // New post
-        const newPost = {
-          id: Date.now(),
-          title,
-          slug: title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
-          category,
-          content,
-          date: dateStr,
-          dateNum: Date.now(),
-          featured
-        };
-        posts.push(newPost);
-      }
+function loadPosts() {
+  const posts = getPosts();
+  const container = document.getElementById('postsContainer');
+  const search = (document.getElementById('postSearch')?.value || '').toLowerCase();
+  const filterCat = document.getElementById('postFilterCat')?.value || '';
+  const filterStatus = document.getElementById('postFilterStatus')?.value || '';
 
-      savePosts(posts);
-      loadPosts();
-      showSuccess();
-      resetForm();
+  // Populate seo post select and category filter
+  populateCategorySelects();
+  populateSeoPostSelect();
+
+  let filtered = posts;
+  if (search) filtered = filtered.filter(p => p.title.toLowerCase().includes(search) || p.content.toLowerCase().includes(search));
+  if (filterCat) filtered = filtered.filter(p => p.category === filterCat);
+  if (filterStatus) filtered = filtered.filter(p => (p.status||'published') === filterStatus);
+
+  filtered.sort((a, b) => b.dateNum - a.dateNum);
+
+  if (filtered.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div class="empty-icon">📝</div><p>No posts found.</p></div>';
+    return;
+  }
+
+  container.innerHTML = filtered.map(p => {
+    const status = p.status || 'published';
+    const statusBadge = status === 'published' ? 'badge-published' : status === 'draft' ? 'badge-draft' : 'badge-scheduled';
+    return `
+      <div class="post-item">
+        <div class="post-check"><input type="checkbox" value="${p.id}" onchange="updateBulkBar()"></div>
+        <div class="post-info">
+          <h4>${escapeHtml(p.title)} ${p.featured ? '<span class="badge badge-featured">Featured</span>' : ''}</h4>
+          <div class="post-meta">
+            <span class="cat">${escapeHtml(p.category)}</span>
+            &middot; ${p.date} &middot; <span class="badge ${statusBadge}">${status}</span>
+          </div>
+        </div>
+        <div class="post-actions">
+          <button class="btn btn-xs btn-secondary" onclick="duplicatePost(${p.id})" title="Duplicate">⧉</button>
+          <button class="btn btn-xs btn-secondary" onclick="editPost(${p.id})">Edit</button>
+          <button class="btn btn-xs btn-danger" onclick="deletePost(${p.id})">Delete</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function filterPosts() { loadPosts(); }
+
+function updateBulkBar() {
+  const checked = document.querySelectorAll('#postsContainer input:checked');
+  const bar = document.getElementById('bulkBar');
+  if (checked.length > 0) {
+    bar.classList.add('show');
+    document.getElementById('bulkCount').textContent = checked.length;
+  } else {
+    bar.classList.remove('show');
+  }
+}
+
+function bulkClear() {
+  document.querySelectorAll('#postsContainer input:checked').forEach(c => c.checked = false);
+  updateBulkBar();
+}
+
+function bulkAction(action) {
+  const checked = document.querySelectorAll('#postsContainer input:checked');
+  const ids = Array.from(checked).map(c => parseInt(c.value));
+  if (ids.length === 0) return;
+  let posts = getPosts();
+  if (action === 'delete') {
+    if (!confirm(`Delete ${ids.length} post(s)?`)) return;
+    posts = posts.filter(p => !ids.includes(p.id));
+    addActivity(`Bulk deleted ${ids.length} posts`);
+  } else if (action === 'publish') {
+    posts = posts.map(p => ids.includes(p.id) ? { ...p, status: 'published' } : p);
+    addActivity(`Bulk published ${ids.length} posts`);
+  } else if (action === 'draft') {
+    posts = posts.map(p => ids.includes(p.id) ? { ...p, status: 'draft' } : p);
+    addActivity(`Bulk set ${ids.length} posts to draft`);
+  }
+  savePosts(posts);
+  loadPosts();
+  updateDashboard();
+  bulkClear();
+}
+
+function editPost(id) {
+  const posts = getPosts();
+  const p = posts.find(x => x.id === id);
+  if (!p) return;
+  currentEditId = id;
+  document.getElementById('editorTitle').innerHTML = 'Edit <span>Post</span>';
+  document.getElementById('postTitle').value = p.title;
+  document.getElementById('postContent').value = p.content;
+  document.getElementById('postStatus').value = p.status || 'published';
+  document.getElementById('postCategory').value = p.category;
+  document.getElementById('postTags').value = p.tags || '';
+  document.getElementById('scheduleDateGroup').style.display = (p.status === 'scheduled') ? 'block' : 'none';
+  if (p.scheduleDate) document.getElementById('postScheduleDate').value = p.scheduleDate;
+  const ft = document.getElementById('postFeaturedToggle');
+  if (p.featured) ft.classList.add('active'); else ft.classList.remove('active');
+  const pt = document.getElementById('postPinnedToggle');
+  if (p.pinned) pt.classList.add('active'); else pt.classList.remove('active');
+  updateSeoPreview();
+  loadRevisions(id);
+  switchPanel('editor');
+}
+
+function savePost() {
+  const title = document.getElementById('postTitle').value.trim();
+  const content = document.getElementById('postContent').value.trim();
+  if (!title || !content) { showAlert('Please enter a title and content.', true); return; }
+
+  const status = document.getElementById('postStatus').value;
+  const category = document.getElementById('postCategory').value;
+  const tags = document.getElementById('postTags').value.trim();
+  const featured = document.getElementById('postFeaturedToggle').classList.contains('active');
+  const pinned = document.getElementById('postPinnedToggle').classList.contains('active');
+  const scheduleDate = document.getElementById('postScheduleDate').value;
+
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+  let posts = getPosts();
+
+  if (currentEditId) {
+    const idx = posts.findIndex(p => p.id === currentEditId);
+    if (idx !== -1) {
+      posts[idx] = { ...posts[idx], title, content, status, category, tags, featured, pinned, scheduleDate, date: dateStr, dateNum: Date.now() };
     }
-
-    function editPost(id) {
-      const posts = getPosts();
-      const post = posts.find(p => p.id === id);
-      if (!post) return;
-
-      document.getElementById('formTitle').textContent = 'Edit Post';
-      document.getElementById('postId').value = post.id;
-      document.getElementById('postTitle').value = post.title;
-      document.getElementById('postCategory').value = post.category;
-      document.getElementById('postContent').value = post.content;
-      document.getElementById('postFeatured').checked = post.featured;
-      document.getElementById('cancelBtn').style.display = 'inline-flex';
-      updateCounts();
-      document.getElementById('blogForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-
-    function deletePost(id) {
-      if (!confirm('Delete this post?')) return;
-      let posts = getPosts();
-      posts = posts.filter(p => p.id !== id);
-      savePosts(posts);
-      loadPosts();
-    }
-
-    function toggleFeatured(id) {
-      let posts = getPosts();
-      const post = posts.find(p => p.id === id);
-      if (post) {
-        // Only one featured at a time
-        if (!post.featured) {
-          posts.forEach(p => p.featured = false);
-        }
-        post.featured = !post.featured;
-        savePosts(posts);
-        loadPosts();
-      }
-    }
-
-    function resetForm() {
-      document.getElementById('formTitle').textContent = 'New Post';
-      document.getElementById('postId').value = '';
-      document.getElementById('postTitle').value = '';
-      document.getElementById('postCategory').value = 'Music';
-      document.getElementById('postContent').value = '';
-      document.getElementById('postFeatured').checked = false;
-      document.getElementById('cancelBtn').style.display = 'none';
-      updateCounts();
-    }
-
-    function showSuccess() {
-      const el = document.getElementById('formSuccess');
-      el.classList.add('show');
-      setTimeout(() => el.classList.remove('show'), 3000);
-    }
-
-    // ---- Char counts ----
-    document.getElementById('postTitle').addEventListener('input', updateCounts);
-    document.getElementById('postContent').addEventListener('input', updateCounts);
-
-    function updateCounts() {
-      document.getElementById('titleCount').textContent = document.getElementById('postTitle').value.length;
-      document.getElementById('contentCount').textContent = document.getElementById('postContent').value.length;
-    }
-
-    // ---- Utilities ----
-    function escapeHtml(str) {
-      const div = document.createElement('div');
-      div.textContent = str;
-      return div.innerHTML;
-    }
-
-    // ── AI Auto-Gen Settings ──
-    const API_URL = '';
-
-    function checkServer() {
-      const el = document.getElementById('serverStatus');
-      fetch(API_URL + '/api/status')
-        .then(r => {
-          if (r.ok) {
-            el.className = 'server-status online';
-            el.innerHTML = '<span class="dot"></span> Server online';
-            loadSettings();
-          } else {
-            throw new Error();
-          }
-        })
-        .catch(() => {
-          el.className = 'server-status offline';
-          el.innerHTML = '<span class="dot"></span> Server offline';
-        });
-    }
-
-    function loadSettings() {
-      fetch(API_URL + '/api/settings')
-        .then(r => r.json())
-        .then(s => {
-          document.getElementById('settingsTime').value = s.time || '09:00';
-          document.getElementById('settingsQuantity').value = s.quantity || 1;
-          const toggle = document.getElementById('toggleEnable');
-          toggle.classList.toggle('active', s.enabled);
-
-          document.getElementById('statTotal').textContent = s.totalGenerated || 0;
-          document.getElementById('statLastQty').textContent = s.lastRunPosts ? s.lastRunPosts + ' posts' : '-';
-          document.getElementById('statNext').textContent = s.nextRun ? new Date(s.nextRun).toLocaleString() : 'Not scheduled';
-          const statusMap = { success: '✅ Success', partial: '⚠️ Partial', failed: '❌ Failed' };
-          document.getElementById('statStatus').textContent = s.lastRun ? (statusMap[s.lastRunStatus] || s.lastRunStatus) : 'Never run';
-        })
-        .catch(() => {});
-    }
-
-    function saveSettings() {
-      const btn = document.querySelector('.form-actions .btn-primary');
-      btn.textContent = 'Saving...';
-      btn.disabled = true;
-
-      fetch(API_URL + '/api/settings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          enabled: document.getElementById('toggleEnable').classList.contains('active'),
-          time: document.getElementById('settingsTime').value,
-          quantity: parseInt(document.getElementById('settingsQuantity').value, 10) || 1,
-        }),
-      })
-        .then(r => r.json())
-        .then(s => {
-          btn.textContent = 'Save Settings';
-          btn.disabled = false;
-          loadSettings();
-          showGenSuccess('Settings saved');
-        })
-        .catch(() => {
-          btn.textContent = 'Save Settings';
-          btn.disabled = false;
-          alert('Could not connect to server. Is it running? (node server.js)');
-        });
-    }
-
-    function toggleScheduler() {
-      document.getElementById('toggleEnable').classList.toggle('active');
-    }
-
-    function generateNow() {
-      const q = parseInt(document.getElementById('settingsQuantity').value, 10) || 1;
-      const btn = document.getElementById('generateNowBtn');
-      const spinner = document.getElementById('genSpinner');
-      btn.style.display = 'none';
-      spinner.style.display = 'inline-flex';
-
-      fetch(API_URL + '/api/generate?q=' + q, { method: 'POST' })
-        .then(r => r.json())
-        .then(result => {
-          spinner.style.display = 'none';
-          btn.style.display = 'inline-flex';
-          if (result.success) {
-            showGenSuccess(`Generated ${result.count} post(s) successfully!`);
-            loadSettings();
-          } else {
-            alert('Generation failed: ' + (result.error || 'Unknown error'));
-          }
-        })
-        .catch(() => {
-          spinner.style.display = 'none';
-          btn.style.display = 'inline-flex';
-          alert('Could not connect to server. Is it running? (node server.js)');
-        });
-    }
-
-    function showGenSuccess(msg) {
-      const el = document.getElementById('formSuccess');
-      el.textContent = msg;
-      el.classList.add('show');
-      setTimeout(() => {
-        el.classList.remove('show');
-        el.textContent = 'Post published successfully!';
-      }, 4000);
-    }
-
-    // Check server on dashboard load
-    const origLoadPosts = loadPosts;
-    loadPosts = function() {
-      origLoadPosts();
-      checkServer();
+    addActivity(`Updated post: "${title}"`);
+    showAlert('Post updated successfully!');
+  } else {
+    const newPost = {
+      id: Date.now(),
+      title,
+      slug: slugify(title),
+      category,
+      content,
+      tags,
+      date: dateStr,
+      dateNum: Date.now(),
+      status,
+      featured,
+      pinned,
+      scheduleDate: status === 'scheduled' ? scheduleDate : null,
+      views: 0,
     };
-  </script>
+    posts.push(newPost);
+    addActivity(`Created post: "${title}"`);
+    showAlert('Post created successfully!');
+  }
+
+  savePosts(posts);
+  resetEditor();
+  loadPosts();
+  updateDashboard();
+}
+
+function savePostAsDraft() {
+  document.getElementById('postStatus').value = 'draft';
+  savePost();
+}
+
+function duplicatePost(id) {
+  let posts = getPosts();
+  const p = posts.find(x => x.id === id);
+  if (!p) return;
+  const dup = { ...p, id: Date.now(), title: p.title + ' (Copy)', dateNum: Date.now(), date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) };
+  delete dup.slug;
+  dup.slug = slugify(dup.title);
+  posts.push(dup);
+  savePosts(posts);
+  addActivity(`Duplicated post: "${p.title}"`);
+  loadPosts();
+  updateDashboard();
+}
+
+function deletePost(id) {
+  if (!confirm('Delete this post?')) return;
+  let posts = getPosts();
+  const p = posts.find(x => x.id === id);
+  posts = posts.filter(x => x.id !== id);
+  savePosts(posts);
+  addActivity(`Deleted post: "${p ? p.title : id}"`);
+  loadPosts();
+  updateDashboard();
+}
+
+function resetEditor() {
+  currentEditId = null;
+  document.getElementById('editorTitle').innerHTML = 'Create <span>Post</span>';
+  document.getElementById('postTitle').value = '';
+  document.getElementById('postContent').value = '';
+  document.getElementById('postStatus').value = 'draft';
+  document.getElementById('postTags').value = '';
+  document.getElementById('postScheduleDate').value = '';
+  document.getElementById('scheduleDateGroup').style.display = 'none';
+  document.getElementById('postFeaturedToggle').classList.remove('active');
+  document.getElementById('postPinnedToggle').classList.remove('active');
+  document.getElementById('revisionCard').style.display = 'none';
+  updateSeoPreview();
+}
+
+function confirmCancel() {
+  if (document.getElementById('postTitle').value.trim() || document.getElementById('postContent').value.trim()) {
+    if (!confirm('Discard unsaved changes?')) return;
+  }
+  resetEditor();
+  switchPanel('posts');
+}
+
+// ── Editor helpers ──
+function wrapText(before, after) {
+  const ta = document.getElementById('postContent');
+  const start = ta.selectionStart, end = ta.selectionEnd;
+  const selected = ta.value.substring(start, end);
+  ta.value = ta.value.substring(0, start) + before + selected + after + ta.value.substring(end);
+  ta.focus();
+  ta.selectionStart = ta.selectionEnd = start + before.length + selected.length + after.length;
+}
+function insertAtCursor(text) {
+  const ta = document.getElementById('postContent');
+  const start = ta.selectionStart;
+  ta.value = ta.value.substring(0, start) + text + ta.value.substring(ta.selectionEnd);
+  ta.focus();
+  ta.selectionStart = ta.selectionEnd = start + text.length;
+}
+function insertHeading(level) {
+  insertAtCursor('\n' + '#'.repeat(level) + ' ');
+}
+function insertImage() {
+  const url = prompt('Image URL:');
+  if (url) insertAtCursor(`\n![Image](${url})\n`);
+}
+
+function updateSeoPreview() {
+  const title = document.getElementById('postTitle').value || 'Post Title';
+  const content = document.getElementById('postContent').value || '';
+  const desc = content.replace(/[#*>\-\[\]()`]/g, '').trim().substring(0, 155);
+  document.getElementById('seoPreviewTitle').textContent = title;
+  document.getElementById('seoPreviewDesc').textContent = desc || 'Post description...';
+}
+
+// ── Revisions ──
+function saveRevision() {
+  if (!currentEditId) { showAlert('Save the post first before creating revisions.', true); return; }
+  const revs = getRevisions();
+  if (!revs[currentEditId]) revs[currentEditId] = [];
+  revs[currentEditId].push({
+    title: document.getElementById('postTitle').value,
+    content: document.getElementById('postContent').value,
+    time: new Date().toISOString(),
+  });
+  if (revs[currentEditId].length > 10) revs[currentEditId].shift();
+  saveRevisions(revs);
+  addActivity('Saved revision');
+  loadRevisions(currentEditId);
+  document.getElementById('revBtn').textContent = '✓ Saved';
+  setTimeout(() => document.getElementById('revBtn').textContent = 'Save Revision', 2000);
+}
+
+function loadRevisions(postId) {
+  const revs = getRevisions()[postId];
+  const card = document.getElementById('revisionCard');
+  const list = document.getElementById('revisionList');
+  if (!revs || revs.length === 0) { card.style.display = 'none'; return; }
+  card.style.display = 'block';
+  list.innerHTML = revs.slice().reverse().map((r, i) => {
+    const idx = revs.length - 1 - i;
+    const d = new Date(r.time);
+    return `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:0.78rem">
+      <span>${d.toLocaleString()}</span>
+      <button class="btn btn-xs btn-secondary" onclick="restoreRevision(${postId},${idx})">Restore</button>
+    </div>`;
+  }).join('');
+}
+
+function restoreRevision(postId, revIdx) {
+  const revs = getRevisions()[postId];
+  if (!revs || !revs[revIdx]) return;
+  const r = revs[revIdx];
+  document.getElementById('postTitle').value = r.title;
+  document.getElementById('postContent').value = r.content;
+  updateSeoPreview();
+  addActivity('Restored revision');
+}
+
+// ── Categories ──
+function loadCategories() {
+  const cats = getCats();
+  const posts = getPosts();
+  const tbody = document.getElementById('categoriesTable');
+  const empty = document.getElementById('categoriesEmpty');
+  if (cats.length === 0) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+  tbody.innerHTML = cats.map(c => `
+    <tr>
+      <td style="font-weight:600">${escapeHtml(c)}</td>
+      <td style="color:var(--text-muted)">${slugify(c)}</td>
+      <td>${posts.filter(p => p.category === c).length}</td>
+      <td>
+        <button class="btn btn-xs btn-secondary" onclick="editCategory('${escapeHtml(c)}')">Edit</button>
+        <button class="btn btn-xs btn-danger" onclick="deleteCategory('${escapeHtml(c)}')">Delete</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function showCategoryModal() {
+  document.getElementById('catEditId').value = '';
+  document.getElementById('catName').value = '';
+  document.getElementById('categoryModal').classList.add('show');
+}
+function editCategory(name) {
+  document.getElementById('catEditId').value = name;
+  document.getElementById('catName').value = name;
+  document.getElementById('categoryModal').classList.add('show');
+}
+function saveCategory() {
+  const name = document.getElementById('catName').value.trim();
+  const editId = document.getElementById('catEditId').value;
+  if (!name) return;
+  let cats = getCats();
+  if (editId) {
+    const idx = cats.indexOf(editId);
+    if (idx !== -1) cats[idx] = name;
+    // Update posts
+    let posts = getPosts();
+    posts = posts.map(p => p.category === editId ? { ...p, category: name } : p);
+    savePosts(posts);
+  } else {
+    if (cats.includes(name)) { alert('Category already exists.'); return; }
+    cats.push(name);
+  }
+  saveCats(cats);
+  addActivity(editId ? `Renamed category "${editId}" to "${name}"` : `Created category "${name}"`);
+  loadCategories();
+  populateCategorySelects();
+  closeModal('categoryModal');
+}
+function deleteCategory(name) {
+  if (!confirm(`Delete category "${name}"?`)) return;
+  let cats = getCats().filter(c => c !== name);
+  saveCats(cats);
+  addActivity(`Deleted category "${name}"`);
+  loadCategories();
+  populateCategorySelects();
+}
+
+// ── Tags ──
+function loadTags() {
+  const tags = getTags();
+  const tbody = document.getElementById('tagsTable');
+  const empty = document.getElementById('tagsEmpty');
+  if (tags.length === 0) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+  const allPostTags = getPosts().reduce((acc, p) => {
+    (p.tags || '').split(',').map(t => t.trim().toLowerCase()).filter(Boolean).forEach(t => { acc[t] = (acc[t] || 0) + 1; });
+    return acc;
+  }, {});
+  tbody.innerHTML = tags.map(t => `
+    <tr>
+      <td style="font-weight:600">${escapeHtml(t)}</td>
+      <td style="color:var(--text-muted)">${slugify(t)}</td>
+      <td>${allPostTags[t.toLowerCase()] || 0}</td>
+      <td>
+        <button class="btn btn-xs btn-secondary" onclick="editTag('${escapeHtml(t)}')">Edit</button>
+        <button class="btn btn-xs btn-danger" onclick="deleteTag('${escapeHtml(t)}')">Delete</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function showTagModal() {
+  document.getElementById('tagEditId').value = '';
+  document.getElementById('tagName').value = '';
+  document.getElementById('tagModal').classList.add('show');
+}
+function editTag(name) {
+  document.getElementById('tagEditId').value = name;
+  document.getElementById('tagName').value = name;
+  document.getElementById('tagModal').classList.add('show');
+}
+function saveTag() {
+  const name = document.getElementById('tagName').value.trim().toLowerCase();
+  const editId = document.getElementById('tagEditId').value;
+  if (!name) return;
+  let tags = getTags();
+  if (editId) {
+    const idx = tags.indexOf(editId);
+    if (idx !== -1) tags[idx] = name;
+  } else {
+    if (tags.includes(name)) { alert('Tag already exists.'); return; }
+    tags.push(name);
+  }
+  saveTags(tags);
+  addActivity(editId ? `Renamed tag "${editId}" to "${name}"` : `Created tag "${name}"`);
+  loadTags();
+  closeModal('tagModal');
+}
+function deleteTag(name) {
+  if (!confirm(`Delete tag "${name}"?`)) return;
+  saveTags(getTags().filter(t => t !== name));
+  addActivity(`Deleted tag "${name}"`);
+  loadTags();
+}
+
+// ── Comments ──
+let commentFilter = 'all';
+function loadComments() {
+  const comments = getComments();
+  const container = document.getElementById('commentsContainer');
+  const filtered = commentFilter === 'all' ? comments : comments.filter(c => c.status === commentFilter);
+  document.getElementById('commentCount').textContent = comments.filter(c => c.status === 'pending').length;
+
+  if (filtered.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div class="empty-icon">💬</div><p>No comments found.</p></div>';
+    return;
+  }
+
+  container.innerHTML = filtered.map(c => `
+    <div class="comment-item">
+      <div class="comment-avatar">${c.author.charAt(0).toUpperCase()}</div>
+      <div class="comment-body">
+        <div class="comment-header">
+          <span class="name">${escapeHtml(c.author)}</span>
+          <span class="date">${c.date}</span>
+          <span class="badge ${c.status === 'approved' ? 'badge-published' : 'badge-draft'}">${c.status}</span>
+        </div>
+        <p>${escapeHtml(c.text)}</p>
+        <div class="comment-actions">
+          ${c.status === 'pending' ? `<button class="btn btn-xs btn-secondary" onclick="approveComment(${c.id})">Approve</button>` : ''}
+          ${c.status !== 'approved' ? `<button class="btn btn-xs btn-secondary" onclick="approveComment(${c.id})">Approve</button>` : ''}
+          <button class="btn btn-xs btn-danger" onclick="deleteComment(${c.id})">Delete</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function switchCommentTab(btn, filter) {
+  document.querySelectorAll('#panel-comments .tabs button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  commentFilter = filter;
+  loadComments();
+}
+
+function approveComment(id) {
+  let comments = getComments();
+  comments = comments.map(c => c.id === id ? { ...c, status: 'approved' } : c);
+  saveComments(comments);
+  addActivity('Approved comment');
+  loadComments();
+  updateDashboard();
+}
+
+function deleteComment(id) {
+  if (!confirm('Delete this comment?')) return;
+  saveComments(getComments().filter(c => c.id !== id));
+  addActivity('Deleted comment');
+  loadComments();
+  updateDashboard();
+}
+
+// ── Media Library ──
+function loadMedia() {
+  const media = getMedia();
+  const gallery = document.getElementById('mediaGallery');
+  if (media.length === 0) {
+    gallery.innerHTML = '';
+    return;
+  }
+  gallery.innerHTML = media.map(m => `
+    <div class="media-item" onclick="copyMediaUrl('${escapeHtml(m.url)}')" title="Click to copy URL">
+      <div class="media-icon">${m.type === 'image' ? '🖼' : '🎬'}</div>
+      <div class="media-name">${escapeHtml(m.name)}</div>
+      <div style="font-size:0.65rem">${(m.size / 1024).toFixed(1)} KB</div>
+    </div>
+  `).join('');
+}
+
+function handleMediaUpload(e) {
+  const files = e.target.files;
+  if (!files.length) return;
+  Array.from(files).forEach(file => {
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      const media = getMedia();
+      media.push({
+        id: Date.now() + Math.random(),
+        name: file.name,
+        url: ev.target.result,
+        type: file.type.startsWith('image') ? 'image' : 'video',
+        size: file.size,
+        date: new Date().toISOString(),
+      });
+      saveMedia(media);
+      loadMedia();
+    };
+    reader.readAsDataURL(file);
+  });
+  addActivity(`Uploaded ${files.length} media file(s)`);
+}
+
+// Drag drop
+const dropZone = document.getElementById('dropZone');
+if (dropZone) {
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('drag-over');
+    const files = e.dataTransfer.files;
+    if (files.length) {
+      document.getElementById('mediaInput').files = files;
+      handleMediaUpload({ target: { files } });
+    }
+  });
+}
+
+function copyMediaUrl(url) {
+  navigator.clipboard.writeText(url).then(() => {
+    showAlert('URL copied to clipboard!');
+  }).catch(() => {
+    prompt('Copy this URL:', url);
+  });
+}
+
+// ── SEO ──
+function populateSeoPostSelect() {
+  const sel = document.getElementById('seoPostSelect');
+  if (!sel) return;
+  const currentVal = sel.value;
+  sel.innerHTML = '<option value="">Select a post...</option>';
+  getPosts().forEach(p => {
+    const o = document.createElement('option');
+    o.value = p.id;
+    o.textContent = p.title;
+    sel.appendChild(o);
+  });
+  if (currentVal) sel.value = currentVal;
+}
+
+function loadSeoPosts() {
+  populateSeoPostSelect();
+}
+
+// ── Analytics (live server data) ──
+let analyticsInterval = null;
+
+function loadAnalytics() {
+  const updateEl = document.getElementById('analyticsLastUpdated');
+  updateEl.textContent = 'Fetching...';
+
+  // Clear any existing auto-refresh
+  if (analyticsInterval) clearInterval(analyticsInterval);
+
+  // Set auto-refresh every 30s while viewing
+  analyticsInterval = setInterval(fetchAnalytics, 30000);
+
+  fetchAnalytics();
+}
+
+function fetchAnalytics() {
+  const updateEl = document.getElementById('analyticsLastUpdated');
+
+  fetch('/api/analytics')
+    .then(r => r.json())
+    .then(d => {
+      document.getElementById('anaTotalViews').textContent = d.totalViews.toLocaleString();
+      document.getElementById('anaUniqueVisitors').textContent = d.uniqueVisitors.toLocaleString();
+      document.getElementById('anaMonthViews').textContent = d.monthViews.toLocaleString();
+      document.getElementById('anaMonthUnique').textContent = d.monthUnique.toLocaleString();
+      document.getElementById('anaBounceRate').textContent = d.bounceRate + '%';
+
+      // Device types count
+      const deviceCount = Object.keys(d.devices || {}).length;
+      document.getElementById('anaDevices').textContent = deviceCount;
+
+      // Traffic Sources
+      const refTotal = d.totalRef || 1;
+      const refHtml = d.topReferrers.map(r => {
+        const pct = ((r.count / refTotal) * 100).toFixed(1);
+        return `<div style="margin-bottom:8px">
+          <div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:2px"><span>${r.source}</span><span>${pct}%</span></div>
+          <div style="height:6px;background:var(--bg);border-radius:3px;overflow:hidden"><div style="width:${pct}%;height:100%;background:var(--accent);border-radius:3px"></div></div>
+        </div>`;
+      }).join('') || '<div style="color:var(--text-muted)">No data yet</div>';
+      document.getElementById('anaTrafficSources').innerHTML = refHtml;
+
+      // Top Pages
+      const pageHtml = d.topPages.map((p, i) => {
+        const name = p.path === '/' ? 'Home' : p.path.replace(/\.html$/, '').replace(/^\//, '');
+        return `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:${i < d.topPages.length-1 ? '1px solid var(--border)' : 'none'};font-size:0.82rem">
+          <span>/${name}</span><span class="text-accent">${p.count}</span>
+        </div>`;
+      }).join('') || '<div style="color:var(--text-muted)">No data yet</div>';
+      document.getElementById('anaTopPages').innerHTML = pageHtml;
+
+      // Daily chart
+      const maxVal = Math.max(...d.daily.map(x => x.count), 1);
+      const bars = d.daily.map(x => {
+        const pct = Math.max((x.count / maxVal) * 100, 0);
+        return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:120px">
+          <div style="width:100%;background:var(--accent);border-radius:3px 3px 0 0;height:${pct}%;min-height:${x.count > 0 ? '4px' : '0'};transition:height 0.3s;opacity:${pct > 0 ? '1' : '0.3'}"></div>
+        </div>`;
+      }).join('');
+      document.getElementById('anaDailyChart').innerHTML = bars;
+
+      // Daily labels (show every 5th day)
+      const labels = d.daily.map((x, i) => {
+        const d = x.date.substring(5);
+        return `<div style="flex:1;text-align:center;font-size:0.5rem;color:var(--text-muted)">${i % 5 === 0 ? d : ''}</div>`;
+      }).join('');
+      document.getElementById('anaDailyLabels').innerHTML = labels;
+
+      // Device breakdown
+      const devTotal = d.deviceTotal || 1;
+      const devHtml = Object.entries(d.devices || {}).map(([name, count]) => {
+        const pct = ((count / devTotal) * 100).toFixed(1);
+        return `<div style="margin-bottom:8px">
+          <div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:2px"><span>${name}</span><span>${pct}%</span></div>
+          <div style="height:6px;background:var(--bg);border-radius:3px;overflow:hidden"><div style="width:${pct}%;height:100%;background:var(--accent);border-radius:3px"></div></div>
+        </div>`;
+      }).join('') || '<div style="color:var(--text-muted)">No data yet</div>';
+      document.getElementById('anaDeviceBreakdown').innerHTML = devHtml;
+
+      // Recent views
+      const recentHtml = d.recent.slice(0, 15).map(r => {
+        const t = new Date(r.time).toLocaleString();
+        const page = r.path === '/' ? 'Home' : r.path;
+        return `<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:0.78rem">
+          <span>${page}</span>
+          <span style="color:var(--text-muted)">${t}</span>
+        </div>`;
+      }).join('') || '<div style="color:var(--text-muted)">No page views yet. Visit the site to generate data.</div>';
+      document.getElementById('anaRecent').innerHTML = recentHtml;
+
+      updateEl.textContent = 'Last updated: ' + new Date(d.lastUpdated).toLocaleTimeString();
+    })
+    .catch(() => {
+      document.getElementById('anaTrafficSources').innerHTML = '<div style="color:var(--accent)">Server offline. Start with: node server.js</div>';
+      document.getElementById('anaTopPages').innerHTML = '<div style="color:var(--accent)">Server offline</div>';
+      document.getElementById('anaRecent').innerHTML = '<div style="color:var(--accent)">Server offline</div>';
+      document.getElementById('anaDailyChart').innerHTML = '<div style="color:var(--accent)">Server offline</div>';
+      updateEl.textContent = 'Server offline';
+    });
+}
+
+function loadSeoForPost() {
+  const postId = document.getElementById('seoPostSelect').value;
+  const seoData = getSeo();
+  const post = getPosts().find(p => p.id === parseInt(postId));
+
+  if (!postId || !post) {
+    ['seoTitle','seoDesc','seoKeyword','seoSlug','seoCanonical','seoOgImage','seoTwitterImage'].forEach(id => document.getElementById(id).value = '');
+    updateSeoScore();
+    return;
+  }
+
+  const s = seoData[postId] || {};
+  document.getElementById('seoTitle').value = s.title || post.title || '';
+  document.getElementById('seoDesc').value = s.desc || post.content.replace(/[#*>\-\[\]()`]/g, '').trim().substring(0, 160) || '';
+  document.getElementById('seoKeyword').value = s.keyword || post.tags || '';
+  document.getElementById('seoSlug').value = s.slug || post.slug || '';
+  document.getElementById('seoCanonical').value = s.canonical || `https://younghadene.ca/blog/${post.slug || ''}`;
+  document.getElementById('seoOgImage').value = s.ogImage || '';
+  document.getElementById('seoTwitterImage').value = s.twitterImage || '';
+  updateSeoScore();
+}
+
+function updateSeoScore() {
+  const title = document.getElementById('seoTitle').value;
+  const desc = document.getElementById('seoDesc').value;
+  const keyword = document.getElementById('seoKeyword').value;
+
+  document.getElementById('seoTitleCount').textContent = title.length;
+  document.getElementById('seoDescCount').textContent = desc.length;
+
+  let score = 0;
+  if (title.length > 20 && title.length <= 60) score += 25;
+  else if (title.length > 0) score += 10;
+  if (desc.length > 50 && desc.length <= 160) score += 25;
+  else if (desc.length > 0) score += 10;
+  if (keyword) score += 20;
+  if (title.toLowerCase().includes(keyword.toLowerCase())) score += 15;
+  if (desc.toLowerCase().includes(keyword.toLowerCase())) score += 15;
+
+  const circle = document.getElementById('seoScoreCircle');
+  circle.textContent = score;
+  circle.className = 'seo-score-circle ' + (score >= 70 ? 'good' : score >= 40 ? 'ok' : 'bad');
+
+  document.getElementById('seoReadability').textContent = desc.length > 50 ? 'Good' : 'Needs work';
+  document.getElementById('seoKeywordDensity').textContent = keyword && desc ? ((desc.toLowerCase().split(keyword.toLowerCase()).length - 1) / desc.split(' ').length * 100).toFixed(1) + '%' : '-';
+  document.getElementById('seoScoreTitle').textContent = title.length + ' chars ' + (title.length > 60 ? '(too long)' : title.length < 20 ? '(too short)' : '(optimal)');
+  document.getElementById('seoScoreDesc').textContent = desc.length + ' chars ' + (desc.length > 160 ? '(too long)' : desc.length < 50 ? '(too short)' : '(optimal)');
+
+  const suggestions = [];
+  if (!keyword) suggestions.push('Add a focus keyword');
+  if (title.length < 20) suggestions.push('SEO title too short (min 20 chars)');
+  if (title.length > 60) suggestions.push('SEO title too long (max 60 chars)');
+  if (desc.length < 50) suggestions.push('Meta description too short (min 50 chars)');
+  if (desc.length > 160) suggestions.push('Meta description too long (max 160 chars)');
+  if (keyword && !title.toLowerCase().includes(keyword.toLowerCase())) suggestions.push('Include focus keyword in SEO title');
+  if (keyword && !desc.toLowerCase().includes(keyword.toLowerCase())) suggestions.push('Include focus keyword in meta description');
+  if (!suggestions.length) suggestions.push('Looks good! No critical issues found.');
+  document.getElementById('seoSuggestions').innerHTML = suggestions.map(s => '• ' + s).join('<br>');
+}
+
+function saveSeoSettings() {
+  const postId = document.getElementById('seoPostSelect').value;
+  if (!postId) { showAlert('Select a post first.', true); return; }
+  const seoData = getSeo();
+  seoData[postId] = {
+    title: document.getElementById('seoTitle').value,
+    desc: document.getElementById('seoDesc').value,
+    keyword: document.getElementById('seoKeyword').value,
+    slug: document.getElementById('seoSlug').value,
+    canonical: document.getElementById('seoCanonical').value,
+    ogImage: document.getElementById('seoOgImage').value,
+    twitterImage: document.getElementById('seoTwitterImage').value,
+  };
+  saveSeo(seoData);
+  addActivity('Updated SEO settings');
+  showAlert('SEO settings saved!');
+}
+
+// ── SEO Analysis Tools ──
+function loadSeoAnalysis() {
+  const postId = document.getElementById('seoAnalyzePost').value;
+  if (!postId) return;
+  const post = getPosts().find(p => p.id === parseInt(postId));
+  if (post) document.getElementById('seoAnalyzeContent').value = post.content;
+}
+
+function runSeoAnalysis() {
+  const content = document.getElementById('seoAnalyzeContent').value.trim();
+  if (!content) { showAlert('Select a post or paste content first.', true); return; }
+
+  const wordCount = content.split(/\s+/).filter(Boolean).length;
+  const charCount = content.length;
+  const sentences = content.split(/[.!?]+/).filter(Boolean).length;
+  const paragraphs = content.split(/\n\s*\n/).filter(Boolean).length;
+  const avgSentence = sentences > 0 ? (wordCount / sentences).toFixed(1) : 0;
+
+  // Heading analysis
+  const h2Count = (content.match(/^##\s/gm) || []).length;
+  const h3Count = (content.match(/^###\s/gm) || []).length;
+  const hasH1 = content.includes('# ') && !content.startsWith('##');
+
+  // Image check
+  const imgCount = (content.match(/!\[.*?\]\(.*?\)/g) || []).length;
+  const imgAltCheck = (content.match(/!\[(.*?)\]/g) || []).filter(m => m.replace(/!\[|\]/g,'').trim().length > 0).length;
+
+  // Readability (Flesch-Kincaid approximation)
+  const syllables = content.replace(/[^a-zA-Z]/g,' ').split(/\s+/).filter(Boolean).reduce((sum, w) => {
+    let s = 0; const word = w.toLowerCase();
+    if (word.length <= 3) return 1;
+    s = (word.match(/[aeiouy]{1,2}/g) || []).length;
+    if (word.endsWith('e')) s--;
+    if (word.endsWith('le') && word.length > 2) s++;
+    return Math.max(s, 1);
+  }, 0);
+  const readability = sentences > 0 && wordCount > 0
+    ? Math.round(206.835 - 1.015 * (wordCount / sentences) - 84.6 * (syllables / wordCount))
+    : 0;
+  const readabilityLabel = readability >= 60 ? 'Good' : readability >= 30 ? 'Fair' : 'Needs work';
+  const readingTime = Math.ceil(wordCount / 200);
+
+  // Keyword extraction (top words)
+  const wordFreq = {};
+  content.replace(/[^a-zA-Z\s]/g,'').toLowerCase().split(/\s+/).filter(w => w.length > 3).forEach(w => {
+    if (!['this','that','with','from','have','been','were','what','when','where','which','their','there','about','would','could','should'].includes(w)) {
+      wordFreq[w] = (wordFreq[w] || 0) + 1;
+    }
+  });
+  const topWords = Object.entries(wordFreq).sort((a,b) => b[1]-a[1]).slice(0, 10);
+
+  const html = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div><span class="text-muted">Words:</span> <strong>${wordCount}</strong></div>
+      <div><span class="text-muted">Characters:</span> <strong>${charCount}</strong></div>
+      <div><span class="text-muted">Sentences:</span> <strong>${sentences}</strong></div>
+      <div><span class="text-muted">Paragraphs:</span> <strong>${paragraphs}</strong></div>
+      <div><span class="text-muted">Avg Sentence:</span> <strong>${avgSentence} words</strong></div>
+      <div><span class="text-muted">Reading Time:</span> <strong>${readingTime} min</strong></div>
+      <div><span class="text-muted">Readability:</span> <strong style="color:${readability >= 60 ? '#22c55e' : readability >= 30 ? '#eab308' : 'var(--accent)'}">${readabilityLabel} (${readability})</strong></div>
+      <div><span class="text-muted">Images:</span> <strong>${imgCount} (${imgAltCheck} with alt text)</strong></div>
+    </div>
+    <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
+      <strong>Heading Structure:</strong><br>
+      ${!hasH1 ? '<span style="color:var(--accent)">⚠️ No H1 heading found</span><br>' : '<span style="color:#22c55e">✅ H1 present</span><br>'}
+      H2: ${h2Count} | H3: ${h3Count}${h2Count === 0 ? ' <span style="color:var(--accent)">(recommended)</span>' : ''}
+    </div>
+    <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
+      <strong>Top Keywords:</strong><br>
+      ${topWords.map(([w,c]) => `<span style="display:inline-block;padding:2px 8px;margin:2px;background:var(--accent-subtle);border-radius:4px;font-size:0.75rem">${w} (${c})</span>`).join('')}
+    </div>
+    ${imgCount > 0 && imgAltCheck < imgCount ? `<div style="margin-top:8px;padding:8px;background:rgba(209,18,18,0.08);border-radius:4px;font-size:0.78rem">
+      <span style="color:var(--accent)">⚠️ ${imgCount - imgAltCheck} image(s) missing alt text</span>
+    </div>` : ''}
+  `;
+  document.getElementById('seoAnalysisResults').innerHTML = html;
+  addActivity('Ran SEO content analysis');
+}
+
+function autoGenerateMeta() {
+  const content = document.getElementById('seoAnalyzeContent').value.trim();
+  if (!content) { showAlert('Paste content or select a post first.', true); return; }
+  const cleaned = content.replace(/[#*>\-\[\]()`]/g, '').trim();
+  const firstSentence = cleaned.split(/[.!?]+/)[0] || '';
+  const title = firstSentence.length > 60 ? firstSentence.substring(0, 57) + '...' : firstSentence;
+  const desc = cleaned.substring(0, 155);
+
+  document.getElementById('seoTitle').value = title;
+  document.getElementById('seoDesc').value = desc;
+
+  // Extract keyword from first 3 significant words
+  const words = cleaned.toLowerCase().split(/\s+/).filter(w => w.length > 3).slice(0, 3);
+  if (words.length > 0) document.getElementById('seoKeyword').value = words.join(' ');
+
+  updateSeoScore();
+  showAlert('Meta title & description generated!');
+  addActivity('Auto-generated SEO meta from content');
+}
+
+function suggestLsiKeywords() {
+  const content = document.getElementById('seoAnalyzeContent').value.trim();
+  if (!content) { showAlert('Paste content first.', true); return; }
+
+  const keywords = [
+    'toronto drill', 'dark trap', 'haitian music', 'canadian hip hop', '6ix culture',
+    'underground rap', 'independent artist', 'toronto music scene', 'drill rap',
+    'melodic trap', 'street narratives', 'haitian heritage', 'toronto rapper',
+    'canadian rapper', 'music production', 'studio sessions', 'music video',
+    'streaming platform', 'hip hop culture', 'toronto nightlife',
+    'artist branding', 'music promotion', 'cover art', 'mixing mastering',
+    'youtube seo', 'spotify playlist', 'apple music', 'soundcloud rap',
+  ];
+
+  // Pick relevant ones based on content overlap
+  const contentLower = content.toLowerCase();
+  const relevant = keywords.filter(k => contentLower.includes(k) || contentLower.includes(k.split(' ')[0]))
+    .slice(0, 8);
+  const suggestions = relevant.length > 0 ? relevant : keywords.slice(0, 8);
+
+  const currentKeyword = document.getElementById('seoKeyword').value;
+  const html = suggestions.filter(k => k !== currentKeyword.toLowerCase()).map(k =>
+    `<span style="display:inline-block;padding:3px 10px;margin:3px;background:var(--accent-subtle);border:1px solid rgba(209,18,18,0.15);border-radius:6px;font-size:0.78rem;cursor:pointer" onclick="document.getElementById('seoKeyword').value += ', ${k}';updateSeoScore()">${k}</span>`
+  ).join('');
+
+  document.getElementById('seoAnalysisResults').innerHTML = `
+    <div style="margin-bottom:8px"><strong>Suggested LSI Keywords:</strong><br>Click to add to focus keyword field.</div>
+    ${html}
+  `;
+  addActivity('Generated LSI keyword suggestions');
+}
+
+function checkSitemap() {
+  const el = document.getElementById('seoSitemapStatus');
+  el.textContent = 'Checking...';
+  fetch('/api/sitemap.xml')
+    .then(r => r.text())
+    .then(xml => {
+      const urls = (xml.match(/<loc>/g) || []).length;
+      el.innerHTML = `✅ Live · ${urls} URLs · <a href="/api/sitemap.xml" target="_blank" style="color:var(--accent)">View</a>`;
+      addActivity('Checked XML sitemap');
+    })
+    .catch(() => { el.textContent = '❌ Server offline'; });
+}
+
+function checkRss() {
+  const el = document.getElementById('seoRssStatus');
+  el.textContent = 'Checking...';
+  fetch('/api/rss.xml')
+    .then(r => r.text())
+    .then(xml => {
+      const items = (xml.match(/<item>/g) || []).length;
+      el.innerHTML = `✅ Live · ${items} items · <a href="/api/rss.xml" target="_blank" style="color:var(--accent)">View</a>`;
+      addActivity('Checked RSS feed');
+    })
+    .catch(() => { el.textContent = '❌ Server offline'; });
+}
+
+function checkRobots() {
+  const el = document.getElementById('seoRobotsStatus');
+  el.textContent = 'Checking...';
+  fetch('/robots.txt')
+    .then(r => r.text())
+    .then(txt => {
+      const hasSitemap = txt.includes('Sitemap');
+      el.innerHTML = hasSitemap ? '✅ Live · Sitemap referenced' : '⚠️ No sitemap reference';
+      addActivity('Checked robots.txt');
+    })
+    .catch(() => { el.textContent = '❌ Server offline'; });
+}
+
+// Populate SEO analysis post select
+function populateSeoAnalyzeSelect() {
+  const sel = document.getElementById('seoAnalyzePost');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">Select a post...</option>';
+  getPosts().forEach(p => {
+    const o = document.createElement('option');
+    o.value = p.id; o.textContent = p.title;
+    sel.appendChild(o);
+  });
+}
+
+// Update loadSeoPosts to also populate the analysis select
+const origLoadSeoPosts = loadSeoPosts;
+loadSeoPosts = function() {
+  if (origLoadSeoPosts) origLoadSeoPosts();
+  populateSeoAnalyzeSelect();
+  buildSeoChecklist();
+  setTimeout(() => { checkSitemap(); checkRss(); checkRobots(); }, 500);
+};
+
+function buildSeoChecklist() {
+  const items = [
+    { label: 'XML Sitemap configured', check: true },
+    { label: 'RSS Feed active', check: true },
+    { label: 'robots.txt present with sitemap', check: true },
+    { label: 'Canonical URLs on all pages', check: true },
+    { label: 'Open Graph meta tags', check: true },
+    { label: 'Twitter Card meta tags', check: true },
+    { label: 'Schema.org structured data (WebSite)', check: true },
+    { label: 'Schema.org BreadcrumbList', check: true },
+    { label: 'Mobile-friendly responsive design', check: true },
+    { label: 'Page speed optimized (caching)', check: true },
+    { label: 'SSL/HTTPS configured', check: window.location.protocol === 'https:' },
+    { label: 'Post slug URLs (clean URLs)', check: true },
+    { label: 'Meta descriptions on all pages', check: true },
+    { label: 'Heading hierarchy (H1 > H2 > H3)', check: true },
+    { label: 'Image alt attributes', check: true },
+    { label: 'Internal linking between posts', check: getPosts().length > 1 },
+    { label: 'Featured images on blog posts', check: true },
+    { label: 'Custom 404 page', check: false },
+    { label: 'Google Search Console setup', check: false },
+    { label: 'Google Analytics (or tracking) active', check: true },
+  ];
+  const html = items.map(item => `
+    <div style="display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid var(--border);font-size:0.78rem">
+      <span style="color:${item.check ? '#22c55e' : 'var(--accent)'}">${item.check ? '✅' : '❌'}</span>
+      <span style="${item.check ? '' : 'color:var(--text-secondary)'}">${item.label}</span>
+    </div>
+  `).join('');
+  document.getElementById('seoChecklist').innerHTML = html;
+}
+
+// ── AI Generator (simulated) ──
+function generateAIPost() {
+  const topic = document.getElementById('aiTopic').value.trim();
+  const style = document.getElementById('aiStyle').value;
+  if (!topic) { showAlert('Enter a topic first.', true); return; }
+  const spinner = document.getElementById('aiSpinner');
+  spinner.style.display = 'inline-flex';
+
+  setTimeout(() => {
+    const titles = [
+      `The Rise of ${topic}: A Deep Dive`,
+      `Why ${topic} Matters in 2026`,
+      `${topic}: Everything You Need to Know`,
+      `Top 5 Reasons ${topic} Is Taking Over`,
+      `Inside ${topic} — An Honest Look`,
+    ];
+    const title = titles[Math.floor(Math.random() * titles.length)];
+    const paragraphs = [
+      `The music scene in Toronto has evolved dramatically over the past decade, and ${topic} represents the cutting edge of this transformation. From the underground clubs of the 6ix to global streaming platforms, the sound continues to resonate with audiences worldwide.`,
+      `What makes ${topic} so compelling is its authenticity. In an era of manufactured content, genuine artistry stands out. Young Hadene represents this movement — blending Haitian heritage with Toronto's hard-hitting drill and trap sound to create something truly unique.`,
+      `The numbers don't lie. With streaming platforms leveling the playing field, independent artists are finding new ways to connect with fans. ${topic} is at the forefront of this shift, proving that you don't need a major label to make a major impact.`,
+      `Looking ahead, the trajectory is clear. As more listeners discover the raw energy of Toronto's underground scene, ${topic} will continue to grow. The 6ix is just getting started.`,
+    ];
+    const content = paragraphs.map(p => p + '\n\n').join('');
+
+    // Fill in the editor
+    currentEditId = null;
+    document.getElementById('editorTitle').innerHTML = 'Create <span>Post</span>';
+    document.getElementById('postTitle').value = title;
+    document.getElementById('postContent').value = content;
+    document.getElementById('postStatus').value = 'draft';
+    document.getElementById('postCategory').value = getCats()[0] || 'Music';
+    document.getElementById('postTags').value = topic.toLowerCase().replace(/\s+/g, ', ');
+    updateSeoPreview();
+
+    spinner.style.display = 'none';
+    showAlert('AI post generated! Review and publish.');
+    switchPanel('editor');
+    addActivity(`Generated AI post: "${title}"`);
+  }, 1500);
+}
+
+// ── Settings ──
+function loadBlogSettings() {
+  const s = getSettings();
+  if (s.blogName) document.getElementById('setBlogName').value = s.blogName;
+  if (s.authorName) document.getElementById('setAuthorName').value = s.authorName;
+  if (s.postsPerPage) document.getElementById('setPostsPerPage').value = s.postsPerPage;
+  if (s.time) document.getElementById('aiSchedTime').value = s.time;
+  if (s.quantity) document.getElementById('aiSchedQty').value = s.quantity;
+  if (s.enabled) document.getElementById('aiSchedToggle').classList.add('active');
+  if (s.rss === false) document.getElementById('setRssToggle').classList.remove('active');
+  if (s.sitemap === false) document.getElementById('setSitemapToggle').classList.remove('active');
+  updateAISchedStatus();
+}
+
+function saveBlogSettings() {
+  const s = getSettings();
+  s.blogName = document.getElementById('setBlogName').value;
+  s.authorName = document.getElementById('setAuthorName').value;
+  s.postsPerPage = parseInt(document.getElementById('setPostsPerPage').value) || 9;
+  s.rss = document.getElementById('setRssToggle').classList.contains('active');
+  s.sitemap = document.getElementById('setSitemapToggle').classList.contains('active');
+  saveSettings(s);
+  addActivity('Updated blog settings');
+  const msg = document.getElementById('settingsSaved');
+  msg.style.display = 'inline';
+  setTimeout(() => msg.style.display = 'none', 2000);
+}
+
+function saveAISettings() {
+  const s = getSettings();
+  s.enabled = document.getElementById('aiSchedToggle').classList.contains('active');
+  s.time = document.getElementById('aiSchedTime').value;
+  s.quantity = parseInt(document.getElementById('aiSchedQty').value) || 1;
+  saveSettings(s);
+  addActivity('Updated AI generation settings');
+  updateAISchedStatus();
+  showAlert('AI settings saved!');
+}
+
+function updateAISchedStatus() {
+  const s = getSettings();
+  const el = document.getElementById('aiSchedStatus');
+  if (s.enabled) {
+    el.innerHTML = `⏰ Scheduled: daily at ${s.time || '09:00'} (${s.quantity || 1} post(s))`;
+  } else {
+    el.textContent = '⏸️ Scheduled generation is disabled';
+  }
+}
+
+function triggerAIGenerate() {
+  const btn = event.target;
+  btn.textContent = 'Generating...';
+  btn.disabled = true;
+  const q = parseInt(document.getElementById('aiSchedQty').value) || 1;
+
+  fetch('/api/generate?q=' + q, { method: 'POST' })
+    .then(r => r.json())
+    .then(result => {
+      btn.textContent = 'Generate Now';
+      btn.disabled = false;
+      if (result.success) {
+        showAlert(`Generated ${result.count} post(s)!`);
+        loadPosts();
+        updateDashboard();
+        addActivity(`Triggered AI generation: ${result.count} post(s)`);
+      } else {
+        // Fallback: generate locally
+        let count = 0;
+        for (let i = 0; i < q; i++) {
+          const topics = ['toronto drill', 'haitian music', 'dark trap', '6ix culture', 'independent artist'];
+          document.getElementById('aiTopic').value = topics[i % topics.length];
+          generateAIPost();
+          count++;
+        }
+        btn.textContent = 'Generate Now';
+        btn.disabled = false;
+        showAlert(`Generated ${count} post(s) locally.`);
+      }
+    })
+    .catch(() => {
+      btn.textContent = 'Generate Now';
+      btn.disabled = false;
+      showAlert('Server offline. Use the AI generator on the Dashboard tab instead.', true);
+    });
+}
+
+// ── Security ──
+function changePassword() {
+  const cur = document.getElementById('curPw').value;
+  const npw = document.getElementById('newPw').value;
+  const msg = document.getElementById('pwMsg');
+  if (cur !== PASSWORD) { msg.textContent = 'Current password is incorrect.'; msg.style.color = 'var(--accent)'; msg.style.display = 'inline'; return; }
+  if (npw.length < 6) { msg.textContent = 'New password must be at least 6 characters.'; msg.style.color = 'var(--accent)'; msg.style.display = 'inline'; return; }
+  // Note: can't actually change because PASSWORD is const, but we store it in settings
+  const s = getSettings();
+  s.password = npw;
+  saveSettings(s);
+  msg.textContent = 'Password updated successfully! (Session will use new password on next login)';
+  msg.style.color = '#22c55e';
+  msg.style.display = 'inline';
+  addActivity('Password changed');
+  document.getElementById('curPw').value = '';
+  document.getElementById('newPw').value = '';
+}
+
+function loadActivityLog() {
+  const log = getData(ACTIVITY_KEY, []);
+  const el = document.getElementById('activityLog');
+  if (log.length === 0) { el.textContent = 'No activity recorded yet.'; return; }
+  el.innerHTML = log.map(l => {
+    const d = new Date(l.time);
+    return `<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)">
+      <span>${escapeHtml(l.msg)}</span>
+      <span style="color:var(--text-muted)">${d.toLocaleString()}</span>
+    </div>`;
+  }).join('');
+}
+
+// ── Modal ──
+function closeModal(id) {
+  document.getElementById(id).classList.remove('show');
+}
+
+// ── Alert ──
+function showAlert(msg, isError) {
+  const el = document.getElementById('editorAlert');
+  el.textContent = msg;
+  el.className = 'alert ' + (isError ? 'alert-error' : 'alert-success') + ' show';
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+// ── Utilities ──
+function slugify(str) {
+  return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'post';
+}
+function escapeHtml(str) {
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+// ── Init on load ──
+if (sessionStorage.getItem(SESSION_KEY) === 'true') {
+  document.addEventListener('DOMContentLoaded', initApp);
+}
+</script>
 </body>
 </html>

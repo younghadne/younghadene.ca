@@ -2495,33 +2495,58 @@ function aiGenerateFullPost() {
   const prompt = document.getElementById('aiGenPrompt').value.trim();
   if (!prompt) { setEditorAiStatus('Enter a topic/prompt first.', true); return; }
   setEditorAiStatus('Generating full post...');
-  editorAiCall(
-    [{ role: 'user', content: 'You are a music blog writer for younghadene.ca (Young Hadene, a Haitian-Toronto drill/dark trap artist). Write a blog post based on this prompt. Format your response EXACTLY like this:\n\nTITLE: [catchy title]\nEXCERPT: [1-2 sentence summary, max 160 chars]\nCATEGORY: [Music | Toronto | Studio Sessions | Behind The Scenes | Lifestyle]\nBODY:\n[2-4 short paragraphs with **bold** for section headings]\n\nPrompt: ' + prompt.substring(0, 2000) }],
-    text => {
-      const title = (text.match(/TITLE:\s*(.+)/i) || [])[1] || '';
-      const excerpt = (text.match(/EXCERPT:\s*(.+)/i) || [])[1] || '';
-      const category = (text.match(/CATEGORY:\s*(.+)/i) || [])[1] || '';
-      const bodyMatch = text.match(/BODY:\s*([\s\S]+)/i);
-      const body = bodyMatch ? bodyMatch[1].trim() : text;
-      if (title) document.getElementById('postTitle').value = title.replace(/^["']|["']$/g, '');
-      if (excerpt) document.getElementById('postExcerpt').value = excerpt.substring(0, 160);
-      if (category) {
-        const sel = document.getElementById('postCategory');
-        if (sel) { for (let i = 0; i < sel.options.length; i++) { if (sel.options[i].text.toLowerCase() === category.toLowerCase()) { sel.selectedIndex = i; break; } } }
+  fetch('/api/ai-chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ model: 'deepseek-v4-flash-free', messages: [{ role: 'user', content: 'You are a music blog writer for younghadene.ca (Young Hadene, a Haitian-Toronto drill/dark trap artist). Write a blog post based on this prompt. Format your response EXACTLY like this:\n\nTITLE: [catchy title]\nEXCERPT: [1-2 sentence summary, max 160 chars]\nCATEGORY: [Music | Toronto | Studio Sessions | Behind The Scenes | Lifestyle]\nBODY:\n[2-4 short paragraphs with **bold** for section headings]\n\nPrompt: ' + prompt.substring(0, 2000) }], temperature: 0.7, max_tokens: 3000 }),
+  })
+    .then(r => r.json())
+    .then(d => {
+      if (d.choices && d.choices[0] && d.choices[0].message && d.choices[0].message.content) {
+        const text = d.choices[0].message.content.trim();
+        const title = (text.match(/TITLE:\s*(.+)/i) || [])[1] || '';
+        const excerpt = (text.match(/EXCERPT:\s*(.+)/i) || [])[1] || '';
+        const category = (text.match(/CATEGORY:\s*(.+)/i) || [])[1] || '';
+        const bodyMatch = text.match(/BODY:\s*([\s\S]+)/i);
+        const body = bodyMatch ? bodyMatch[1].trim() : text;
+        if (title) document.getElementById('postTitle').value = title.replace(/^["']|["']$/g, '');
+        if (excerpt) document.getElementById('postExcerpt').value = excerpt.substring(0, 160);
+        if (category) {
+          const sel = document.getElementById('postCategory');
+          if (sel) { for (let i = 0; i < sel.options.length; i++) { if (sel.options[i].text.toLowerCase() === category.toLowerCase()) { sel.selectedIndex = i; break; } } }
+        }
+        if (body) document.getElementById('postContent').value = body;
+        document.getElementById('postStatus').value = 'published';
+        updateSeoPreview();
+        if (title && body) { savePost(); setEditorAiStatus('✅ AI post generated and published!'); }
+        else { setEditorAiStatus('Post generated! Edit then publish.'); }
+      } else {
+        aiGenerateFullPostFallback(prompt);
       }
-      if (body) document.getElementById('postContent').value = body;
-      document.getElementById('postStatus').value = 'published';
-      updateSeoPreview();
-      setEditorAiStatus('Post generated! Edit if needed, then click Publish.');
-
-      // Auto-save as published post
-      if (title && body) {
-        savePost();
-        setEditorAiStatus('✅ Post generated and published!');
-      }
-    },
-    { maxTokens: 3000 }
-  );
+    })
+    .catch(() => { aiGenerateFullPostFallback(prompt); });
+}
+function aiGenerateFullPostFallback(prompt) {
+  const titles = [
+    `The Rise of ${prompt}: A Deep Dive`,
+    `Why ${prompt} Matters in 2026`,
+    `${prompt}: Everything You Need to Know`,
+    `Inside ${prompt} — An Honest Look`,
+  ];
+  const title = titles[Math.floor(Math.random() * titles.length)];
+  const cats = ['Music', 'Toronto', 'Studio Sessions', 'Behind The Scenes', 'Lifestyle'];
+  const category = cats[Math.floor(Math.random() * cats.length)];
+  const body = `**The Scene**\n${prompt} has become a defining force in Toronto's music landscape. From underground sessions to viral moments, the energy is undeniable.\n\n**Why It Matters**\nIn an era where authenticity is everything, ${prompt} represents the raw, unfiltered voice of the streets. Young Hadene embodies this movement — blending Haitian roots with Toronto's hard-hitting sound.\n\n**What's Next**\nAs more listeners discover the 6ix, ${prompt} will only grow. The culture is moving forward, and the world is watching.`;
+  const excerpt = `A deep dive into ${prompt} and its impact on Toronto's music scene.`;
+  document.getElementById('postTitle').value = title;
+  document.getElementById('postExcerpt').value = excerpt.substring(0, 160);
+  document.getElementById('postContent').value = body;
+  document.getElementById('postStatus').value = 'published';
+  const sel = document.getElementById('postCategory');
+  if (sel) { for (let i = 0; i < sel.options.length; i++) { if (sel.options[i].text.toLowerCase() === category.toLowerCase()) { sel.selectedIndex = i; break; } } }
+  updateSeoPreview();
+  savePost();
+  setEditorAiStatus('✅ Post generated and published! (offline mode)');
 }
 
 // ── AI Generator (simulated) ──

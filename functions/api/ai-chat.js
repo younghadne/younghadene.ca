@@ -1,5 +1,13 @@
-export async function onRequestPost(context) {
+export async function onRequest(context) {
   const { request, env } = context;
+  if (request.method === 'OPTIONS') {
+    return new Response(null, {
+      headers: { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'POST, OPTIONS', 'Access-Control-Allow-Headers': 'content-type' },
+    });
+  }
+  if (request.method !== 'POST') {
+    return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405, headers: { 'Content-Type': 'application/json' } });
+  }
   const key = env.DEEPSEEK_API_KEY;
   if (!key) {
     return new Response(JSON.stringify({ error: 'DEEPSEEK_API_KEY not set in Cloudflare Pages env' }), {
@@ -48,10 +56,4 @@ export async function onRequestPost(context) {
       status: 500, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
     });
   }
-}
-
-export async function onRequestOptions() {
-  return new Response(null, {
-    headers: { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'POST, OPTIONS', 'Access-Control-Allow-Headers': 'content-type' },
-  });
 }

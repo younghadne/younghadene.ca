@@ -2378,6 +2378,7 @@ function generateAIPost() {
   const style = document.getElementById('aiStyle').value;
   if (!topic) { showAlert('Enter a topic first.', true); return; }
   const spinner = document.getElementById('aiSpinner');
+  const resultEl = document.getElementById('aiGenResult');
   spinner.style.display = 'inline-flex';
 
   setTimeout(() => {
@@ -2397,23 +2398,35 @@ function generateAIPost() {
     ];
     const content = paragraphs.map(p => p + '\n\n').join('');
 
-    // Fill in the editor
-    currentEditId = null;
-    document.getElementById('editorTitle').innerHTML = 'Create <span>Post</span>';
-    document.getElementById('postTitle').value = title;
-    document.getElementById('postContent').value = content;
-    document.getElementById('postStatus').value = 'draft';
-    document.getElementById('postCategory').value = getCats()[0] || 'Music';
-    document.getElementById('postTags').value = topic.toLowerCase().replace(/\s+/g, ', ');
-    updateSeoPreview();
+    // Auto-save as published post
+    const posts = getPosts();
+    const slug = slugify(title);
+    const newPost = {
+      id: Date.now(),
+      title,
+      slug,
+      category: document.getElementById('postCategory').value || getCats()[0] || 'Music',
+      date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+      dateNum: Date.now(),
+      featured: false,
+      status: 'published',
+      content,
+    };
+    posts.unshift(newPost);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+    loadPosts();
+    updateDashboard();
 
     spinner.style.display = 'none';
-    const resultEl = document.getElementById('aiGenResult');
+    const postUrl = '/blog/' + slug;
+    const liveUrl = 'https://younghadene.ca' + postUrl;
     resultEl.style.display = 'block';
-    resultEl.innerHTML = '<strong>Generated:</strong> ' + escapeHtml(title) + '<br><span style="color:var(--text-muted)">Switched to editor. Review and publish.</span>';
-    showAlert('AI post generated! Review and publish.');
-    switchPanel('editor');
-    addActivity(`Generated AI post: "${title}"`);
+    resultEl.innerHTML = '<strong>✅ Published:</strong> ' + escapeHtml(title) +
+      '<br><a href="' + postUrl + '" target="_blank" style="color:var(--accent)">🔗 ' + escapeHtml(liveUrl) + '</a>' +
+      '<br><span style="color:var(--text-muted);font-size:0.75rem">Post is saved locally. Trigger a Cloudflare deploy to make it live on younghadene.ca</span>' +
+      '<br><br><button class="btn btn-primary btn-sm" onclick="triggerCfDeploy()">🚀 Deploy to Live Site</button>';
+    showAlert('AI post published! Link: ' + liveUrl);
+    addActivity(`Published AI post: "${title}" → ${postUrl}`);
   }, 1500);
 }
 

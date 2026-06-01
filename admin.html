@@ -531,6 +531,7 @@
       <a href="#" data-panel="media"><span class="nav-icon">🖼️</span> Media Library</a>
       <a href="#" data-panel="comments"><span class="nav-icon">💬</span> Comments <span class="nav-badge" id="commentCount">0</span></a>
       <a href="#" data-panel="seo"><span class="nav-icon">🔍</span> SEO Manager</a>
+      <a href="#" data-panel="ai"><span class="nav-icon">🤖</span> AI</a>
       <a href="#" data-panel="analytics"><span class="nav-icon">📈</span> Analytics</a>
 
       <div class="nav-section" style="margin-top:12px;">Settings</div>
@@ -615,29 +616,11 @@
       </div>
 
       <!-- AI Generator Quick Action -->
-      <div class="card mt-16">
+      <div class="card mt-16" style="cursor:pointer;border:1px dashed var(--accent);" onclick="switchPanel('ai')">
         <div class="card-header">
-          <h3>AI <span>Blog Generator</span></h3>
+          <h3>AI <span>Blog Generator</span> <span style="font-size:0.7rem;color:var(--accent);font-weight:400">→ Open AI Panel</span></h3>
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Topic / Keyword</label>
-            <input type="text" id="aiTopic" placeholder="e.g. Toronto drill music scene" style="background:var(--bg)">
-          </div>
-          <div class="form-group">
-            <label>Style</label>
-            <select id="aiStyle" style="background:var(--bg)">
-              <option>Standard</option>
-              <option>Deep Dive</option>
-              <option>Listicle</option>
-              <option>Interview Style</option>
-            </select>
-          </div>
-        </div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <button class="btn btn-primary btn-sm" onclick="generateAIPost()">Generate with AI</button>
-          <span id="aiSpinner" style="display:none;color:var(--text-muted);font-size:0.8rem;align-self:center">Generating...</span>
-        </div>
+        <p class="text-sm" style="color:var(--text-muted)">Generate posts with AI, schedule auto-generation, analyze SEO, and trigger Cloudflare Pages deployment — all in the <strong>AI Panel</strong>.</p>
       </div>
     </div>
 
@@ -936,37 +919,11 @@
       </div>
 
       <!-- AI SEO Analysis Tools -->
-      <div class="card mt-16">
-        <div class="flex-between" style="margin-bottom:16px">
-          <h3 style="font-size:0.9rem;font-weight:600">AI SEO <span class="text-accent">Analysis Tools</span></h3>
+      <div class="card mt-16" style="cursor:pointer;border:1px dashed var(--accent);" onclick="switchPanel('ai')">
+        <div class="card-header">
+          <h3>AI SEO <span class="text-accent">Analysis Tools</span> <span style="font-size:0.7rem;color:var(--accent);font-weight:400">→ Open AI Panel</span></h3>
         </div>
-
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-          <div>
-            <div class="form-group">
-              <label>Analyze Post Content</label>
-              <select id="seoAnalyzePost" onchange="loadSeoAnalysis()" style="background:var(--bg)"></select>
-            </div>
-            <div class="form-group">
-              <label>Or paste content to analyze</label>
-              <textarea id="seoAnalyzeContent" placeholder="Paste article content here for AI analysis..." style="min-height:100px;background:var(--bg)"></textarea>
-            </div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap">
-              <button class="btn btn-primary btn-sm" onclick="runSeoAnalysis()">Run Analysis</button>
-              <button class="btn btn-secondary btn-sm" onclick="autoGenerateMeta()">Generate Meta</button>
-              <button class="btn btn-secondary btn-sm" onclick="suggestLsiKeywords()">Suggest LSI Keywords</button>
-            </div>
-          </div>
-
-          <div>
-            <div class="card" style="background:var(--bg);margin-bottom:12px">
-              <h4 style="font-size:0.85rem;margin-bottom:8px">Content <span class="text-accent">Analysis</span></h4>
-              <div id="seoAnalysisResults" style="font-size:0.8rem;color:var(--text-secondary);line-height:1.8">
-                Select a post or paste content and click "Run Analysis".
-              </div>
-            </div>
-          </div>
-        </div>
+        <p class="text-sm" style="color:var(--text-muted)">AI content analysis, meta generation, LSI keyword suggestions — all in the <strong>AI Panel</strong>.</p>
       </div>
 
       <!-- SEO Site Tools -->
@@ -1001,6 +958,119 @@
             Select a post above and run analysis to see internal linking opportunities.
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- ===== AI PANEL ===== -->
+    <div class="panel" id="panel-ai">
+      <div class="page-header">
+        <h1>🤖 AI <span>Studio</span></h1>
+      </div>
+
+      <!-- Section 1: AI Blog Generator -->
+      <div class="card mb-16">
+        <div class="card-header"><h3>AI Blog <span>Generator</span></h3></div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Topic / Keyword</label>
+            <input type="text" id="aiTopic" placeholder="e.g. Toronto drill music scene" style="background:var(--bg)">
+          </div>
+          <div class="form-group">
+            <label>Style</label>
+            <select id="aiStyle" style="background:var(--bg)">
+              <option>Standard</option>
+              <option>Deep Dive</option>
+              <option>Listicle</option>
+              <option>Interview Style</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-primary btn-sm" onclick="generateAIPost()">Generate with AI</button>
+          <span id="aiSpinner" style="display:none;color:var(--text-muted);font-size:0.8rem;align-self:center">Generating...</span>
+        </div>
+        <div id="aiGenResult" class="mt-16" style="font-size:0.8rem;color:var(--text-secondary);background:var(--bg);padding:16px;border-radius:6px;display:none;max-height:300px;overflow-y:auto"></div>
+      </div>
+
+      <!-- Section 2: AI Auto-Generation -->
+      <div class="card mb-16">
+        <h3 style="font-size:0.9rem;font-weight:600;margin-bottom:16px">AI Auto-<span class="text-accent">Generation</span></h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Schedule Time</label>
+            <input type="time" id="aiSchedTime" value="09:00" style="background:var(--bg)">
+          </div>
+          <div class="form-group">
+            <label>Posts Per Day</label>
+            <input type="number" id="aiSchedQty" value="1" min="1" max="20" style="background:var(--bg)">
+          </div>
+        </div>
+        <div class="toggle-wrap">
+          <span class="text-sm">Enable Scheduled Generation</span>
+          <div class="toggle" id="aiSchedToggle" onclick="this.classList.toggle('active')"></div>
+        </div>
+        <div class="flex-between mt-16">
+          <button class="btn btn-primary btn-sm" onclick="saveAISettings()">Save & Apply</button>
+          <button class="btn btn-secondary btn-sm" onclick="triggerAIGenerate()">Generate Now</button>
+        </div>
+        <div id="aiSchedStatus" class="mt-16" style="font-size:0.8rem;color:var(--text-secondary)"></div>
+      </div>
+
+      <!-- Section 3: AI SEO Analysis -->
+      <div class="card mb-16">
+        <h3 style="font-size:0.9rem;font-weight:600;margin-bottom:16px">AI SEO <span class="text-accent">Analysis</span></h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div>
+            <div class="form-group">
+              <label>Analyze Post Content</label>
+              <select id="seoAnalyzePost" onchange="loadSeoAnalysis()" style="background:var(--bg)"></select>
+            </div>
+            <div class="form-group">
+              <label>Or paste content to analyze</label>
+              <textarea id="seoAnalyzeContent" placeholder="Paste article content here for AI analysis..." style="min-height:100px;background:var(--bg)"></textarea>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button class="btn btn-primary btn-sm" onclick="runSeoAnalysis()">Run Analysis</button>
+              <button class="btn btn-secondary btn-sm" onclick="autoGenerateMeta()">Generate Meta</button>
+              <button class="btn btn-secondary btn-sm" onclick="suggestLsiKeywords()">Suggest LSI Keywords</button>
+            </div>
+          </div>
+          <div>
+            <div class="card" style="background:var(--bg);margin-bottom:12px">
+              <h4 style="font-size:0.85rem;margin-bottom:8px">Content <span class="text-accent">Analysis</span></h4>
+              <div id="seoAnalysisResults" style="font-size:0.8rem;color:var(--text-secondary);line-height:1.8">
+                Select a post or paste content and click "Run Analysis".
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 4: Cloudflare Pages Deploy -->
+      <div class="card mb-16">
+        <h3 style="font-size:0.9rem;font-weight:600;margin-bottom:16px">Cloudflare Pages <span class="text-accent">Deploy</span></h3>
+        <div class="text-sm" style="color:var(--text-muted);margin-bottom:12px">Trigger a Cloudflare Pages build to generate AI blog posts and deploy them live.</div>
+        <div id="aiCfStatus" class="server-status offline mb-16"><span class="dot"></span> Not configured</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Cloudflare API Token</label>
+            <input type="password" id="aiCfToken" placeholder="cfut_... or CF API token" style="background:var(--bg)">
+          </div>
+          <div class="form-group">
+            <label>Account ID</label>
+            <input type="text" id="aiCfAccount" value="e2a677e4f6a949d761d5ec81b9f3c0c2" style="background:var(--bg)">
+          </div>
+          <div class="form-group">
+            <label>Project Name</label>
+            <input type="text" id="aiCfProject" value="young-hadene-site696969" style="background:var(--bg)">
+          </div>
+        </div>
+        <div class="flex-between mt-16">
+          <button class="btn btn-secondary btn-sm" onclick="testCfConnection()">Test Connection</button>
+          <button class="btn btn-primary btn-sm" onclick="triggerCfDeploy()">Trigger Deploy</button>
+          <span id="aiCfSpinner" style="display:none;color:var(--text-muted);font-size:0.8rem;align-self:center">Deploying...</span>
+        </div>
+        <div id="aiCfLog" class="gen-log mt-16" style="display:none;font-size:0.75rem;max-height:200px"></div>
       </div>
     </div>
 
@@ -1093,27 +1163,11 @@
         <span id="settingsSaved" style="display:none;color:#22c55e;font-size:0.82rem;margin-left:12px">✓ Saved</span>
       </div>
 
-      <div class="card mb-16">
-        <h3 style="font-size:0.9rem;font-weight:600;margin-bottom:16px">AI Auto-<span class="text-accent">Generation</span></h3>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Schedule Time</label>
-            <input type="time" id="aiSchedTime" value="09:00" style="background:var(--bg)">
-          </div>
-          <div class="form-group">
-            <label>Posts Per Day</label>
-            <input type="number" id="aiSchedQty" value="1" min="1" max="20" style="background:var(--bg)">
-          </div>
+      <div class="card mb-16" style="cursor:pointer;border:1px dashed var(--accent);" onclick="switchPanel('ai')">
+        <div class="card-header">
+          <h3>AI Auto-<span class="text-accent">Generation</span> <span style="font-size:0.7rem;color:var(--accent);font-weight:400">→ Open AI Panel</span></h3>
         </div>
-        <div class="toggle-wrap">
-          <span class="text-sm">Enable Scheduled Generation</span>
-          <div class="toggle" id="aiSchedToggle" onclick="this.classList.toggle('active')"></div>
-        </div>
-        <div class="flex-between mt-16">
-          <button class="btn btn-primary btn-sm" onclick="saveAISettings()">Save & Apply</button>
-          <button class="btn btn-secondary btn-sm" onclick="triggerAIGenerate()">Generate Now</button>
-        </div>
-        <div id="aiSchedStatus" class="mt-16" style="font-size:0.8rem;color:var(--text-secondary)"></div>
+        <p class="text-sm" style="color:var(--text-muted)">Schedule AI post generation, trigger manual generation, configure Cloudflare Pages deploy — all in the <strong>AI Panel</strong>.</p>
       </div>
     </div>
 
@@ -2354,6 +2408,9 @@ function generateAIPost() {
     updateSeoPreview();
 
     spinner.style.display = 'none';
+    const resultEl = document.getElementById('aiGenResult');
+    resultEl.style.display = 'block';
+    resultEl.innerHTML = '<strong>Generated:</strong> ' + escapeHtml(title) + '<br><span style="color:var(--text-muted)">Switched to editor. Review and publish.</span>';
     showAlert('AI post generated! Review and publish.');
     switchPanel('editor');
     addActivity(`Generated AI post: "${title}"`);
@@ -2443,6 +2500,105 @@ function triggerAIGenerate() {
       btn.textContent = 'Generate Now';
       btn.disabled = false;
       showAlert('Server offline. Use the AI generator on the Dashboard tab instead.', true);
+    });
+}
+
+// ── Cloudflare Pages Deploy ──
+const CF_API_STORAGE = 'yh_cfConfig';
+const CF_LOG_STORAGE = 'yh_cfLog';
+const CF_ACCOUNT = 'e2a677e4f6a949d761d5ec81b9f3c0c2';
+const CF_PROJECT = 'young-hadene-site696969';
+
+function loadCfConfig() {
+  try { return JSON.parse(localStorage.getItem(CF_API_STORAGE)) || {}; } catch { return {}; }
+}
+function saveCfConfig(cfg) {
+  localStorage.setItem(CF_API_STORAGE, JSON.stringify(cfg));
+}
+function getCfToken() {
+  const cfg = loadCfConfig();
+  const manual = document.getElementById('aiCfToken').value.trim();
+  if (manual) { cfg.cfToken = manual; saveCfConfig(cfg); return manual; }
+  return cfg.cfToken || '';
+}
+function getCfAccount() {
+  const manual = document.getElementById('aiCfAccount').value.trim();
+  return manual || CF_ACCOUNT;
+}
+function getCfProject() {
+  const manual = document.getElementById('aiCfProject').value.trim();
+  return manual || CF_PROJECT;
+}
+function addCfLog(msg, type) {
+  const log = document.getElementById('aiCfLog');
+  log.style.display = 'block';
+  log.innerHTML += `<span class="${type || 'info'}">${msg}</span>\n`;
+  log.scrollTop = log.scrollHeight;
+}
+
+function testCfConnection() {
+  const token = getCfToken();
+  if (!token) { showAlert('Enter a Cloudflare API token first.', true); return; }
+  const el = document.getElementById('aiCfStatus');
+  el.className = 'server-status';
+  el.innerHTML = '<span class="dot" style="background:#eab308"></span> Testing token...';
+  const acct = getCfAccount();
+  const proj = getCfProject();
+  fetch('https://api.cloudflare.com/client/v4/accounts/' + acct + '/pages/projects/' + proj, {
+    headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+  })
+    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(d => {
+      if (d.success) {
+        el.className = 'server-status online';
+        el.innerHTML = '<span class="dot"></span> Connected to: ' + (d.result.name || proj);
+        showAlert('Cloudflare connection successful!');
+        addActivity('Cloudflare Pages connection verified');
+      } else {
+        throw new Error(d.errors && d.errors[0] ? d.errors[0].message : 'Unknown error');
+      }
+    })
+    .catch(e => {
+      el.className = 'server-status offline';
+      el.innerHTML = '<span class="dot"></span> Connection failed: ' + e.message;
+      showAlert('Connection failed: ' + e.message, true);
+    });
+}
+
+function triggerCfDeploy() {
+  const token = getCfToken();
+  if (!token) { showAlert('Enter a Cloudflare API token first.', true); return; }
+  const btn = document.getElementById('aiCfSpinner');
+  const log = document.getElementById('aiCfLog');
+  btn.style.display = 'inline-flex';
+  log.style.display = 'block';
+  log.innerHTML = '<span class="info">Triggering Cloudflare Pages deployment...</span>\n';
+  addCfLog('Building with AI-generated content...', 'info');
+  const acct = getCfAccount();
+  const proj = getCfProject();
+  fetch('https://api.cloudflare.com/client/v4/accounts/' + acct + '/pages/projects/' + proj + '/deployments', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ branch: 'main' }),
+  })
+    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(d => {
+      btn.style.display = 'none';
+      if (d.success) {
+        addCfLog('Deployment created! ID: ' + d.result.id, 'ok');
+        addCfLog('Status: ' + (d.result.latest_stage ? d.result.latest_stage.name + ' (' + d.result.latest_stage.status + ')' : 'queued'), 'ok');
+        addCfLog('Visit your site: https://younghadene.ca', 'info');
+        showAlert('Cloudflare Pages deploy triggered!');
+        addActivity('Triggered Cloudflare Pages deployment');
+      } else {
+        addCfLog('Deployment failed: ' + (d.errors && d.errors[0] ? d.errors[0].message : 'Unknown error'), 'fail');
+        showAlert('Deploy failed. Check the log.', true);
+      }
+    })
+    .catch(e => {
+      btn.style.display = 'none';
+      addCfLog('Error: ' + e.message, 'fail');
+      showAlert('Deploy error: ' + e.message, true);
     });
 }
 

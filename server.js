@@ -270,6 +270,33 @@ const server = http.createServer((req, res) => {
     return json({ ok: true, uptime: process.uptime(), pid: process.pid, postCount: getBlogPosts().length });
   }
 
+  // ── Cloudflare API Proxy ──
+  if (url.pathname === '/api/cf-proxy' && req.method === 'POST') {
+    let body = ''; req.on('data', c => body += c);
+    req.on('end', () => {
+      try {
+        const { method, path, headers: reqHeaders, data } = JSON.parse(body);
+        const cfUrl = 'https://api.cloudflare.com/client/v4' + path;
+        const reqBody = data ? JSON.stringify(data) : undefined;
+        const options = {
+          method: method || 'GET',
+          headers: {
+            'Authorization': reqHeaders?.Authorization || '',
+            'Content-Type': 'application/json',
+          },
+        };
+        if (reqBody) options.body = reqBody;
+        fetch(cfUrl, options)
+          .then(r => r.text().then(text => ({ status: r.status, text })))
+          .then(({ status, text }) => {
+            try { return json(JSON.parse(text), status); } catch { return send(res, status, text, 'application/json'); }
+          })
+          .catch(e => json({ error: e.message }, 500));
+      } catch (e) { return json({ error: e.message }, 400); }
+    });
+    return;
+  }
+
   // ── Blog post pages (SEO-injected) ──
   const blogMatch = url.pathname.match(/^\/blog\/(.+)\.html$/);
   if (blogMatch) {

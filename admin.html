@@ -2585,10 +2585,12 @@ function testCfConnection() {
   el.innerHTML = '<span class="dot" style="background:#eab308"></span> Testing token...';
   const acct = getCfAccount();
   const proj = getCfProject();
-  fetch('https://api.cloudflare.com/client/v4/accounts/' + acct + '/pages/projects/' + proj, {
-    headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+  fetch('/api/cf-proxy', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ method: 'GET', path: '/accounts/' + acct + '/pages/projects/' + proj, headers: { Authorization: 'Bearer ' + token } }),
   })
-    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(r => r.json())
     .then(d => {
       if (d.success) {
         el.className = 'server-status online';
@@ -2617,12 +2619,12 @@ function triggerCfDeploy() {
   addCfLog('Building with AI-generated content...', 'info');
   const acct = getCfAccount();
   const proj = getCfProject();
-  fetch('https://api.cloudflare.com/client/v4/accounts/' + acct + '/pages/projects/' + proj + '/deployments', {
+  fetch('/api/cf-proxy', {
     method: 'POST',
-    headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ branch: 'main' }),
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ method: 'POST', path: '/accounts/' + acct + '/pages/projects/' + proj + '/deployments', headers: { Authorization: 'Bearer ' + token }, data: { branch: 'main' } }),
   })
-    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(r => r.json())
     .then(d => {
       btn.style.display = 'none';
       if (d.success) {

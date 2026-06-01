@@ -1380,6 +1380,7 @@ function initApp() {
   loadSeoPosts();
   loadActivityLog();
   loadBlogSettings();
+  loadCfSettingsFromServer();
   document.getElementById('postStatus').addEventListener('change', function() {
     document.getElementById('scheduleDateGroup').style.display = this.value === 'scheduled' ? 'block' : 'none';
   });
@@ -2659,12 +2660,26 @@ const CF_API_STORAGE = 'yh_cfConfig';
 const CF_LOG_STORAGE = 'yh_cfLog';
 const CF_ACCOUNT = 'e2a677e4f6a949d761d5ec81b9f3c0c2';
 const CF_PROJECT = 'young-hadene-site696969';
-
 function loadCfConfig() {
   try { return JSON.parse(localStorage.getItem(CF_API_STORAGE)) || {}; } catch { return {}; }
 }
 function saveCfConfig(cfg) {
   localStorage.setItem(CF_API_STORAGE, JSON.stringify(cfg));
+}
+function loadCfSettingsFromServer() {
+  fetch('/api/settings')
+    .then(r => r.json())
+    .then(s => {
+      if (s.cfToken) {
+        document.getElementById('aiCfToken').value = s.cfToken;
+        const cfg = loadCfConfig();
+        cfg.cfToken = s.cfToken;
+        saveCfConfig(cfg);
+      }
+      if (s.cfAccount) document.getElementById('aiCfAccount').value = s.cfAccount;
+      if (s.cfProject) document.getElementById('aiCfProject').value = s.cfProject;
+    })
+    .catch(() => {});
 }
 function getCfToken() {
   const cfg = loadCfConfig();

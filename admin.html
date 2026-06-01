@@ -2425,7 +2425,7 @@ function editorAiCall(messages, callback, opts) {
   fetch('/api/ai-chat', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ model: 'deepseek-v4-flash-free', messages, temperature: 0.7, max_tokens: opts?.maxTokens || 2000 }),
+    body: JSON.stringify({ model: 'deepseek-v4-flash-free', messages, temperature: 0.7, max_tokens: opts?.maxTokens || 3000 }),
   })
     .then(r => r.json())
     .then(d => {

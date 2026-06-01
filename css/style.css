@@ -1752,8 +1752,8 @@ h1, h2, h3, h4, h5, h6 {
 .services-hero-image {
   position: absolute;
   inset: 0;
-  background: url('../images/poster1.png') center 30%/cover no-repeat;
-  opacity: 0.3;
+  background: url('../images/young_hadene_background_2.png') center 30%/cover no-repeat;
+  opacity: 0.7;
 }
 
 .services-hero-overlay {

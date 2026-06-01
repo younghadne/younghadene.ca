@@ -298,14 +298,19 @@ const server = http.createServer((req, res) => {
   }
 
   // ── AI Chat Proxy (uses opencode.json API key) ──
-  if (url.pathname === '/api/ai-chat' && req.method === 'POST') {
+  if (url.pathname === '/api/ai-chat' && (req.method === 'POST' || req.method === 'OPTIONS')) {
+    if (req.method === 'OPTIONS') { res.writeHead(200); res.end(); return; }
     let body = ''; req.on('data', c => body += c);
     req.on('end', () => {
       try {
-        const opencodeCfg = JSON.parse(fs.readFileSync(path.join(__dirname, 'opencode.json'), 'utf8'));
-        const key = opencodeCfg.provider?.deepseek?.options?.apiKey || process.env.DEEPSEEK_API_KEY;
-        if (!key) { return json({ error: 'No API key found in opencode.json' }, 500); }
-        const cfgModel = (opencodeCfg.model || '').split('/').pop() || 'deepseek-v4-flash-free';
+        let key;
+        try {
+          const opencodeCfg = JSON.parse(fs.readFileSync(path.join(__dirname, 'opencode.json'), 'utf8'));
+          key = opencodeCfg.provider?.deepseek?.options?.apiKey || process.env.DEEPSEEK_API_KEY;
+        } catch (e) {
+          key = process.env.DEEPSEEK_API_KEY;
+        }
+        if (!key) { return json({ error: 'No API key found. Check opencode.json or set DEEPSEEK_API_KEY env.' }, 500); }
         const data = JSON.parse(body);
         if (!data.messages || !data.messages.length) { return json({ error: 'messages required' }, 400); }
         fetch('https://opencode.ai/zen/v1/chat/completions', {
@@ -315,27 +320,29 @@ const server = http.createServer((req, res) => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            model: data.model || 'deepseek-v4-flash-free',
+            model: 'deepseek-v4-flash-free',
             messages: data.messages,
             temperature: data.temperature ?? 0.7,
-            max_tokens: data.max_tokens ?? 2000,
+            max_tokens: data.max_tokens ?? 3000,
           }),
         })
           .then(r => r.text().then(text => ({ status: r.status, text })))
           .then(({ status, text }) => {
+            if (!text || !text.trim()) { return json({ error: 'AI returned empty response. Try again.' }, 502); }
             try {
               const parsed = JSON.parse(text);
+              if (parsed.error) { return json(parsed, status); }
               if (parsed.choices && parsed.choices[0] && parsed.choices[0].message) {
                 const msg = parsed.choices[0].message;
-                if (!msg.content && (msg.reasoning_content || msg.reasoning)) {
-                  msg.content = msg.reasoning_content || msg.reasoning || '';
-                }
+                if (!msg.content) msg.content = msg.reasoning_content || msg.reasoning || '';
+                // Strip reasoning prefixes from content
+                msg.content = msg.content.replace(/^(Thinking\..*?\n)/, '').replace(/^(The user says?:.*?\n)/i, '').replace(/^(First,.*?\n)/i, '').replace(/^(We need to.*?\n)/i, '').trim();
               }
               return json(parsed, status);
-            } catch { return send(res, status, text, 'application/json'); }
+            } catch { return json({ error: 'Invalid JSON from AI', raw: text.substring(0, 200) }, 502); }
           })
-          .catch(e => json({ error: e.message }, 500));
-      } catch (e) { return json({ error: e.message }, 400); }
+          .catch(e => json({ error: 'AI API call failed: ' + e.message }, 500));
+      } catch (e) { return json({ error: 'Request error: ' + e.message }, 400); }
     });
     return;
   }

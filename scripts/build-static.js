@@ -34,6 +34,7 @@ function buildSitemap(posts) {
     { path: '/', priority: '1.0', freq: 'monthly' },
     { path: '/music.html', priority: '0.9', freq: 'monthly' },
     { path: '/blog.html', priority: '0.9', freq: 'weekly' },
+    { path: '/services.html', priority: '0.8', freq: 'monthly' },
     { path: '/contact.html', priority: '0.7', freq: 'monthly' },
   ];
 

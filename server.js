@@ -151,7 +151,7 @@ const server = http.createServer((req, res) => {
   // ── GET /api/sitemap.xml ──
   if (url.pathname === '/api/sitemap.xml' && req.method === 'GET') {
     const posts = getBlogPosts();
-    const staticPages = ['/', '/music.html', '/blog.html', '/contact.html'];
+    const staticPages = ['/', '/music.html', '/blog.html', '/services.html', '/contact.html'];
     let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
     xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
     staticPages.forEach(p => {
@@ -292,7 +292,7 @@ const server = http.createServer((req, res) => {
 <body>
   <header class="header"><div class="header-inner"><a href="/" class="logo">YOUNG<span class="logo-accent">HADENE</span><span class="logo-sub">Toronto • Dark Trap</span></a>
     <button class="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
-    <nav><ul class="nav-list"><li><a href="/" class="nav-link">Home</a></li><li><a href="/music.html" class="nav-link">Music</a></li><li><a href="/blog.html" class="nav-link active">Blog</a></li><li><a href="/contact.html" class="nav-link">Contact</a></li></ul></nav></div></header>
+    <nav><ul class="nav-list"><li><a href="/" class="nav-link">Home</a></li><li><a href="/music.html" class="nav-link">Music</a></li><li><a href="/blog.html" class="nav-link active">Blog</a></li><li><a href="/services.html" class="nav-link">Services</a></li><li><a href="/contact.html" class="nav-link">Contact</a></li></ul></nav></div></header>
   <section class="page-hero"><div class="container"><span class="section-label">${escHtml(post.category || 'Blog')}</span><h1 class="section-title">${escHtml(post.title)}</h1><p class="section-subtitle">${date}</p></div></section>
   <section class="section" style="padding:40px 0 100px"><div class="container"><div class="card" style="padding:40px;max-width:800px;margin:0 auto;font-size:1rem;line-height:1.9;color:var(--text-secondary)"><p>${content}</p></div></div></section>
   <footer class="footer"><div class="container"><div class="footer-bottom"><p>&copy; ${new Date().getFullYear()} Young Hadene. All rights reserved. Toronto. 6ix.</p></div></div></footer>
@@ -304,7 +304,7 @@ const server = http.createServer((req, res) => {
   }
 
   // ── Clean URL support (like Cloudflare Pages auto-redirect) ──
-  const cleanPages = { '/blog': '/blog.html', '/admin': '/admin.html', '/contact': '/contact.html', '/music': '/music.html' };
+  const cleanPages = { '/blog': '/blog.html', '/services': '/services.html', '/admin': '/admin.html', '/contact': '/contact.html', '/music': '/music.html' };
   if (cleanPages[url.pathname]) {
     url.pathname = cleanPages[url.pathname];
   }

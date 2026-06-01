@@ -714,6 +714,32 @@
               <textarea id="postContent" placeholder="Write your content here..." style="min-height:360px;border-radius:0 0 var(--radius-sm) var(--radius-sm);border-top:none" oninput="updateSeoPreview()"></textarea>
             </div>
           </div>
+
+          <!-- AI Assistant in Editor -->
+          <div class="card" id="editorAiCard">
+            <div class="ai-assistant-header" onclick="document.getElementById('editorAiBody').classList.toggle('hidden');document.getElementById('editorAiArrow').classList.toggle('rotated')" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px">
+              <h3 style="font-size:0.9rem;font-weight:600;margin:0"><span class="text-accent">AI</span> Assistant</h3>
+              <span id="editorAiArrow" style="font-size:0.7rem;transition:transform .2s">▼</span>
+            </div>
+            <div id="editorAiBody" class="hidden" style="margin-top:12px">
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <button class="btn btn-sm btn-secondary" onclick="aiGenerateTitle()">
+                  ✨ Generate Title from Content
+                </button>
+                <button class="btn btn-sm btn-secondary" onclick="aiExpandContent()">
+                  ✨ Expand Content (add 2 paragraphs)
+                </button>
+                <button class="btn btn-sm btn-secondary" onclick="aiGenerateMetaDesc()">
+                  ✨ Generate Meta Description
+                </button>
+                <button class="btn btn-sm btn-secondary" onclick="aiImproveWriting()">
+                  ✨ Improve Writing / Rewrite
+                </button>
+              </div>
+              <div id="editorAiStatus" class="text-sm" style="margin-top:8px;color:var(--text-muted)"></div>
+            </div>
+          </div>
+          <script>setTimeout(()=>{const e=document.getElementById('editorAiBody');if(e)e.classList.remove('hidden');},300)</script>
         </div>
 
         <div style="display:flex;flex-direction:column;gap:16px">
@@ -739,6 +765,10 @@
             <div class="form-group">
               <label>Tags (comma separated)</label>
               <input type="text" id="postTags" placeholder="e.g. toronto, drill, music">
+            </div>
+            <div class="form-group">
+              <label>Excerpt / Meta Description</label>
+              <textarea id="postExcerpt" rows="2" maxlength="160" placeholder="Short description for search results (160 chars)" style="font-size:0.8rem;resize:vertical" oninput="updateSeoPreview()"></textarea>
             </div>
             <div class="toggle-wrap">
               <span class="text-sm">Featured Post</span>
@@ -1518,6 +1548,7 @@ function editPost(id) {
   document.getElementById('postStatus').value = p.status || 'published';
   document.getElementById('postCategory').value = p.category;
   document.getElementById('postTags').value = p.tags || '';
+  document.getElementById('postExcerpt').value = p.excerpt || '';
   document.getElementById('scheduleDateGroup').style.display = (p.status === 'scheduled') ? 'block' : 'none';
   if (p.scheduleDate) document.getElementById('postScheduleDate').value = p.scheduleDate;
   const ft = document.getElementById('postFeaturedToggle');
@@ -1537,6 +1568,7 @@ function savePost() {
   const status = document.getElementById('postStatus').value;
   const category = document.getElementById('postCategory').value;
   const tags = document.getElementById('postTags').value.trim();
+  const excerpt = document.getElementById('postExcerpt').value.trim();
   const featured = document.getElementById('postFeaturedToggle').classList.contains('active');
   const pinned = document.getElementById('postPinnedToggle').classList.contains('active');
   const scheduleDate = document.getElementById('postScheduleDate').value;
@@ -1549,7 +1581,7 @@ function savePost() {
   if (currentEditId) {
     const idx = posts.findIndex(p => p.id === currentEditId);
     if (idx !== -1) {
-      posts[idx] = { ...posts[idx], title, content, status, category, tags, featured, pinned, scheduleDate, date: dateStr, dateNum: Date.now() };
+      posts[idx] = { ...posts[idx], title, content, excerpt, status, category, tags, featured, pinned, scheduleDate, date: dateStr, dateNum: Date.now() };
     }
     addActivity(`Updated post: "${title}"`);
     showAlert('Post updated successfully!');
@@ -1560,6 +1592,7 @@ function savePost() {
       slug: slugify(title),
       category,
       content,
+      excerpt,
       tags,
       date: dateStr,
       dateNum: Date.now(),
@@ -1617,6 +1650,7 @@ function resetEditor() {
   document.getElementById('postContent').value = '';
   document.getElementById('postStatus').value = 'draft';
   document.getElementById('postTags').value = '';
+  document.getElementById('postExcerpt').value = '';
   document.getElementById('postScheduleDate').value = '';
   document.getElementById('scheduleDateGroup').style.display = 'none';
   document.getElementById('postFeaturedToggle').classList.remove('active');
@@ -1659,8 +1693,9 @@ function insertImage() {
 
 function updateSeoPreview() {
   const title = document.getElementById('postTitle').value || 'Post Title';
+  const excerpt = document.getElementById('postExcerpt').value.trim();
   const content = document.getElementById('postContent').value || '';
-  const desc = content.replace(/[#*>\-\[\]()`]/g, '').trim().substring(0, 155);
+  const desc = excerpt || content.replace(/[#*>\-\[\]()`]/g, '').trim().substring(0, 155);
   document.getElementById('seoPreviewTitle').textContent = title;
   document.getElementById('seoPreviewDesc').textContent = desc || 'Post description...';
 }
@@ -2370,6 +2405,81 @@ function buildSeoChecklist() {
     </div>
   `).join('');
   document.getElementById('seoChecklist').innerHTML = html;
+}
+
+// ── Editor AI Assistant ──
+function setEditorAiStatus(msg, isError) {
+  const el = document.getElementById('editorAiStatus');
+  if (el) el.innerHTML = isError ? '<span style="color:#ef4444">' + escapeHtml(msg) + '</span>' : escapeHtml(msg);
+}
+function editorAiCall(messages, callback) {
+  setEditorAiStatus('Thinking...');
+  fetch('/api/ai-chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ model: 'deepseek/deepseek-v4-flash', messages, temperature: 0.7, max_tokens: 2000 }),
+  })
+    .then(r => r.json())
+    .then(d => {
+      if (d.choices && d.choices[0]) {
+        const text = d.choices[0].message.content.trim();
+        callback(text);
+      } else {
+        setEditorAiStatus('AI error: ' + (d.error || 'unknown'), true);
+      }
+    })
+    .catch(e => {
+      setEditorAiStatus('Network error: ' + e.message + ' (server running?)', true);
+    });
+}
+function aiGenerateTitle() {
+  const content = document.getElementById('postContent').value.trim();
+  if (!content) { setEditorAiStatus('Write some content first.', true); return; }
+  editorAiCall(
+    [{ role: 'user', content: 'Generate a compelling blog post title (max 10 words, no quotes) for this content. Only return the title, nothing else:\n\n' + content.substring(0, 3000) }],
+    text => {
+      document.getElementById('postTitle').value = text.replace(/^["']|["']$/g, '');
+      updateSeoPreview();
+      setEditorAiStatus('Title generated!');
+    }
+  );
+}
+function aiExpandContent() {
+  const content = document.getElementById('postContent').value.trim();
+  if (!content) { setEditorAiStatus('Write some content first.', true); return; }
+  editorAiCall(
+    [{ role: 'user', content: 'Continue this blog post. Write 2 more paragraphs (keep the same tone and style). Return ONLY the new paragraphs in plain text, no headings or introduction:\n\n' + content.substring(0, 3000) }],
+    text => {
+      document.getElementById('postContent').value = content + '\n\n' + text;
+      updateSeoPreview();
+      setEditorAiStatus('Content expanded!');
+    }
+  );
+}
+function aiGenerateMetaDesc() {
+  const content = document.getElementById('postContent').value.trim();
+  if (!content) { setEditorAiStatus('Write some content first.', true); return; }
+  editorAiCall(
+    [{ role: 'user', content: 'Write a concise SEO meta description (120-160 characters) for this blog post. Return ONLY the description text, nothing else:\n\n' + content.substring(0, 2000) }],
+    text => {
+      const descField = document.getElementById('postMetaDesc') || document.getElementById('postExcerpt');
+      if (descField) descField.value = text.substring(0, 160);
+      updateSeoPreview();
+      setEditorAiStatus('Meta description generated!');
+    }
+  );
+}
+function aiImproveWriting() {
+  const content = document.getElementById('postContent').value.trim();
+  if (!content) { setEditorAiStatus('Write some content first.', true); return; }
+  editorAiCall(
+    [{ role: 'user', content: 'Rewrite this blog post content to be more engaging, polished, and professional while keeping the same message. Fix grammar, improve flow, and make it punchier. Return ONLY the rewritten content:\n\n' + content.substring(0, 3000) }],
+    text => {
+      document.getElementById('postContent').value = text;
+      updateSeoPreview();
+      setEditorAiStatus('Content improved!');
+    }
+  );
 }
 
 // ── AI Generator (simulated) ──

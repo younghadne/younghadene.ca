@@ -297,6 +297,49 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // ── AI Chat Proxy (uses opencode.json API key) ──
+  if (url.pathname === '/api/ai-chat' && req.method === 'POST') {
+    let body = ''; req.on('data', c => body += c);
+    req.on('end', () => {
+      try {
+        const opencodeCfg = JSON.parse(fs.readFileSync(path.join(__dirname, 'opencode.json'), 'utf8'));
+        const key = opencodeCfg.provider?.deepseek?.options?.apiKey || process.env.DEEPSEEK_API_KEY;
+        if (!key) { return json({ error: 'No API key found in opencode.json' }, 500); }
+        const cfgModel = (opencodeCfg.model || '').split('/').pop() || 'deepseek-v4-flash-free';
+        const data = JSON.parse(body);
+        if (!data.messages || !data.messages.length) { return json({ error: 'messages required' }, 400); }
+        fetch('https://opencode.ai/zen/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            model: data.model || 'deepseek-v4-flash-free',
+            messages: data.messages,
+            temperature: data.temperature ?? 0.7,
+            max_tokens: data.max_tokens ?? 2000,
+          }),
+        })
+          .then(r => r.text().then(text => ({ status: r.status, text })))
+          .then(({ status, text }) => {
+            try {
+              const parsed = JSON.parse(text);
+              if (parsed.choices && parsed.choices[0] && parsed.choices[0].message) {
+                const msg = parsed.choices[0].message;
+                if (!msg.content && (msg.reasoning_content || msg.reasoning)) {
+                  msg.content = msg.reasoning_content || msg.reasoning || '';
+                }
+              }
+              return json(parsed, status);
+            } catch { return send(res, status, text, 'application/json'); }
+          })
+          .catch(e => json({ error: e.message }, 500));
+      } catch (e) { return json({ error: e.message }, 400); }
+    });
+    return;
+  }
+
   // ── Blog post pages (SEO-injected) ──
   const blogMatch = url.pathname.match(/^\/blog\/(.+)\.html$/);
   if (blogMatch) {

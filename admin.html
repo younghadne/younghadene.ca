@@ -2429,11 +2429,13 @@ function editorAiCall(messages, callback, opts) {
   })
     .then(r => r.json())
     .then(d => {
-      if (d.choices && d.choices[0]) {
+      if (d.choices && d.choices[0] && d.choices[0].message && d.choices[0].message.content) {
         const text = d.choices[0].message.content.trim();
         callback(text);
       } else {
-        setEditorAiStatus('AI error: ' + (d.error || 'unknown'), true);
+        const err = d.error || d.error?.message || d.errors?.[0]?.message || d.type || 'unknown';
+        const msg = typeof err === 'string' ? err : err.message || JSON.stringify(err);
+        setEditorAiStatus('AI error: ' + msg, true);
       }
     })
     .catch(e => {

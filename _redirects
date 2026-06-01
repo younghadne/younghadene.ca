@@ -1,5 +1,4 @@
 # Cloudflare Pages redirects
-/  /
-/blog  /blog.html
-/services  /services.html
-/admin  /admin.html
+/blog  /blog.html  200
+/services  /services.html  200
+/admin  /admin.html  200

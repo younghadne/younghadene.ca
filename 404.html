@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#050505">
+  <meta name="robots" content="noindex,follow">
+  <title>404 — Page Not Found | Young Hadene</title>
+  <meta name="description" content="Page not found. Lost in the 6ix? Head back to Young Hadene's homepage.">
+  <link rel="canonical" href="https://younghadene.ca/404.html">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>🎧</text></svg>">
+  <style>
+    .page-404 { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:80vh; text-align:center; padding:120px 24px 60px; }
+    .page-404 h1 { font-size:clamp(4rem, 12vw, 8rem); font-weight:900; line-height:1; margin:0 0 8px; background:linear-gradient(135deg,var(--accent),#ff4444); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .page-404 .sub { font-size:1.2rem; color:var(--text-secondary); margin-bottom:32px; }
+    .page-404 .glow-line { width:80px; height:3px; background:var(--accent); border-radius:2px; margin:0 auto 24px; box-shadow:0 0 12px var(--accent); }
+    .page-404 p { color:var(--text-muted); max-width:400px; margin-bottom:32px; font-size:0.9rem; }
+    .page-404 .btn { display:inline-flex; align-items:center; gap:8px; padding:12px 28px; background:var(--accent); color:#fff; border-radius:var(--radius-sm); text-decoration:none; font-weight:600; font-size:0.9rem; transition:all .2s; }
+    .page-404 .btn:hover { background:#e01515; transform:translateY(-1px); box-shadow:0 4px 20px rgba(209,18,18,.3); }
+    .page-404 .links { display:flex; gap:16px; flex-wrap:wrap; justify-content:center; margin-top:8px; }
+    .page-404 .links a { color:var(--text-muted); font-size:0.8rem; text-decoration:none; transition:color .2s; }
+    .page-404 .links a:hover { color:var(--accent); }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        YOUNG<span class="logo-accent">HADENE</span>
+        <span class="logo-sub">Toronto &bull; Dark Trap</span>
+      </a>
+      <button class="hamburger" aria-label="Toggle menu" onclick="document.querySelector('.nav-list').classList.toggle('open');this.classList.toggle('active')">
+        <span></span><span></span><span></span>
+      </button>
+      <nav>
+        <ul class="nav-list">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="music.html" class="nav-link">Music</a></li>
+          <li><a href="blog.html" class="nav-link">Blog</a></li>
+          <li><a href="contact.html" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-404">
+    <h1>404</h1>
+    <div class="glow-line"></div>
+    <div class="sub">Lost in the 6ix</div>
+    <p>This page got lost somewhere between Scarborough and Rexdale. Even the GPS can't find it.</p>
+    <a href="index.html" class="btn">&#8592; Back to Base</a>
+    <div class="links">
+      <a href="music.html">Music</a>
+      <a href="blog.html">Blog</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="footer-logo">YOUNG<span style="color:var(--accent)">HADENE</span></div>
+        <p>Haitian-born. Toronto-raised. Built Different.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Instagram">IG</a>
+          <a href="#" aria-label="Twitter/X">X</a>
+          <a href="#" aria-label="YouTube">YT</a>
+          <a href="#" aria-label="Spotify">&#x266B;</a>
+        </div>
+      </div>
+      <div>
+        <h4>Navigate</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="music.html">Music</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Music</h4>
+        <ul>
+          <li><a href="#">Spotify</a></li>
+          <li><a href="#">Apple Music</a></li>
+          <li><a href="#">SoundCloud</a></li>
+          <li><a href="#">YouTube Music</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="mailto:contact@younghadene.ca">Email</a></li>
+          <li><a href="#">Bookings</a></li>
+          <li><a href="#">Press Kit</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Young Hadene. All rights reserved. Toronto. 6ix.</p>
+      <div class="footer-bottom-links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

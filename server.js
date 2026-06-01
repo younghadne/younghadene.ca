@@ -413,11 +413,12 @@ const server = http.createServer((req, res) => {
 
   // ── Static assets (non-HTML) with caching ──
   if (!fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()) {
+    const notFound = fs.existsSync(path.join(__dirname, '404.html')) ? fs.readFileSync(path.join(__dirname, '404.html'), 'utf8') : '<!DOCTYPE html><html><head><title>Not Found</title></head><body><h1>Not Found</h1></body></html>';
     // Serve SPA fallback for blog/ paths
     if (url.pathname.startsWith('/blog/')) {
-      return send(res, 404, '<!DOCTYPE html><html><head><title>Not Found</title><meta name="robots" content="noindex"></head><body><h1>Not Found</h1></body></html>', 'text/html');
+      return send(res, 404, notFound, 'text/html');
     }
-    res.writeHead(404, { 'Content-Type': 'text/plain' }); return res.end('Not found');
+    return send(res, 404, notFound, 'text/html');
   }
 
   const cacheMaxAge = ext === '.html' ? 600 : ext === '.png' || ext === '.jpg' || ext === '.jpeg' || ext === '.webp' || ext === '.svg' || ext === '.ico' ? 86400 : 3600;

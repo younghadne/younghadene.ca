@@ -2427,6 +2427,7 @@ function generateAIPost() {
       '<br><br><button class="btn btn-primary btn-sm" onclick="triggerCfDeploy()">🚀 Deploy to Live Site</button>';
     showAlert('AI post published! Link: ' + liveUrl);
     addActivity(`Published AI post: "${title}" → ${postUrl}`);
+    return { title, url: postUrl };
   }, 1500);
 }
 
@@ -2480,7 +2481,7 @@ function updateAISchedStatus() {
 }
 
 function triggerAIGenerate() {
-  const btn = event.target;
+  const btn = document.querySelector('#panel-ai .btn-secondary');  
   btn.textContent = 'Generating...';
   btn.disabled = true;
   const q = parseInt(document.getElementById('aiSchedQty').value) || 1;
@@ -2491,28 +2492,55 @@ function triggerAIGenerate() {
       btn.textContent = 'Generate Now';
       btn.disabled = false;
       if (result.success) {
-        showAlert(`Generated ${result.count} post(s)!`);
+        showAlert(`Generated ${result.count} post(s) from server!`);
         loadPosts();
         updateDashboard();
         addActivity(`Triggered AI generation: ${result.count} post(s)`);
+        // Show links for server-generated posts
+        const posts = getPosts().slice(0, result.count);
+        const resultEl = document.getElementById('aiGenResult');
+        resultEl.style.display = 'block';
+        resultEl.innerHTML = '<strong>✅ Generated ' + result.count + ' post(s) from server:</strong><br>' +
+          posts.map(p => '<a href="/blog/' + p.slug + '" target="_blank" style="color:var(--accent);display:block;padding:2px 0">🔗 ' + escapeHtml(p.title) + '</a>').join('') +
+          '<br><button class="btn btn-primary btn-sm" onclick="triggerCfDeploy()">🚀 Deploy to Live Site</button>';
       } else {
         // Fallback: generate locally
         let count = 0;
+        let links = [];
         for (let i = 0; i < q; i++) {
           const topics = ['toronto drill', 'haitian music', 'dark trap', '6ix culture', 'independent artist'];
           document.getElementById('aiTopic').value = topics[i % topics.length];
-          generateAIPost();
-          count++;
+          const result = generateAIPost();
+          if (result) { count++; links.push(result); }
         }
         btn.textContent = 'Generate Now';
         btn.disabled = false;
+        const resultEl = document.getElementById('aiGenResult');
+        resultEl.style.display = 'block';
+        resultEl.innerHTML = '<strong>✅ Generated ' + count + ' post(s) locally:</strong><br>' +
+          links.map(l => '<a href="' + l.url + '" target="_blank" style="color:var(--accent);display:block;padding:2px 0">🔗 ' + escapeHtml(l.title) + '</a>').join('') +
+          '<br><button class="btn btn-primary btn-sm" onclick="triggerCfDeploy()">🚀 Deploy to Live Site</button>';
         showAlert(`Generated ${count} post(s) locally.`);
       }
     })
     .catch(() => {
       btn.textContent = 'Generate Now';
       btn.disabled = false;
-      showAlert('Server offline. Use the AI generator on the Dashboard tab instead.', true);
+      // Fallback: generate locally
+      let count = 0;
+      let links = [];
+      for (let i = 0; i < q; i++) {
+        const topics = ['toronto drill', 'haitian music', 'dark trap', '6ix culture', 'independent artist'];
+        document.getElementById('aiTopic').value = topics[i % topics.length];
+        const result = generateAIPost();
+        if (result) { count++; links.push(result); }
+      }
+      const resultEl = document.getElementById('aiGenResult');
+      resultEl.style.display = 'block';
+      resultEl.innerHTML = '<strong>✅ Generated ' + count + ' post(s) locally:</strong><br>' +
+        links.map(l => '<a href="' + l.url + '" target="_blank" style="color:var(--accent);display:block;padding:2px 0">🔗 ' + escapeHtml(l.title) + '</a>').join('') +
+        '<br><button class="btn btn-primary btn-sm" onclick="triggerCfDeploy()">🚀 Deploy to Live Site</button>';
+      showAlert('Server offline. Generated locally.', true);
     });
 }
 

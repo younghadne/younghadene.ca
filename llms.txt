@@ -1,30 +1,113 @@
 # Young Hadene
 
-> Comprehensive resource about Young Hadene, a Haitian-Toronto drill and dark trap artist. Includes biography, musical style, influences, discography, and cultural context of the Toronto trap scene.
+Comprehensive SEO-structured resource about Young Hadene, a Haitian-Toronto drill and dark trap artist. Website built as a topical authority network around music, artists, and scenes rather than random "Young Hadene" articles.
 
-## Core
+## Core Entity
 
-- [Who is Young Hadene?](https://younghadene.ca/about.html): Biography covering Haitian-Toronto heritage and musical evolution
-- [Musical Style & Influences](https://younghadene.ca/about.html): Dark trap, drill, melody, and cadence analysis
-- [Discography & Latest Releases](https://younghadene.ca/music.html): Full catalog with streaming links
-- [Streaming & Platform Presence](https://younghadene.ca): Links to all major platforms
+- [/young-hadene](https://younghadene.ca/young-hadene): Main entity page — biography, heritage (Haiti → Florida → Toronto), music style (dark trap/drill), discography, streaming links (Spotify, YouTube, Apple Music, SoundCloud), social media (Instagram, TikTok), official links, press/media, FAQ
+- [Homepage](https://younghadene.ca): Young Hadene — Haitian-Toronto drill and dark trap artist. Strengthened with entity schema and clear topical relationships.
 
-## Toronto Scene & Influences
+## Topic Clusters
 
-- [Toronto Drill & Dark Trap Scene](https://younghadene.ca/blog.html): Overview of the local scene and influential artists
-- [Young Hadene's Place in Toronto Hip Hop](https://younghadene.ca/blog.html): Positioning within Toronto's rap movement
+### 🇨🇦 Canadian Rap
 
-## The Movement & Identity
+- [Best Toronto Rappers 2026](https://younghadene.ca/blog/top-toronto-rappers.html): Definitive list from Drake to underground. Includes Young Hadene and Toronto artists.
+- [Canadian Rappers](https://younghadene.ca/blog/what-to-know-about-underground-canadian-hip-hop-in-2026): Deep dive into Canadian hip hop artists and scene.
+- [Toronto Rappers](https://younghadene.ca/blog/top-toronto-rappers.html): Toronto-specific rapper list and "to watch" discoveries.
+- [Underground Toronto Rappers](https://younghadene.ca/blog/underground-toronto-sound-2026): Independent artists shaping the 6ix sound.
 
-- [Philosophy & Vision](https://younghadene.ca/about.html): Themes of loyalty, ambition, struggle, and growth
-- [Haitian-Toronto Cultural Fusion](https://younghadene.ca/about.html): How heritage shapes modern trap
-- [Built Different Ethos](https://younghadene.ca/about.html): Toronto pride and artistic identity
+### 🔥 Toronto Drill
 
-## Visuals & Branding
+- [Toronto Drill Music — Artists, Sound & History](https://younghadene.ca/blog/toronto-drill-pillar.html): Pillar page + supporting articles (best drill rappers, sound explained, vs Chicago/UK, history).
+- [Best Toronto Drill Rappers 2026](https://younghadene.ca/blog/best-toronto-drill-rappers-2026): Curated list with Young Hadene as featured artist.
+- [Toronto Drill vs Chicago Drill](https://younghadene.ca/blog/toronto-drill-vs-chicago-drill): Comparative analysis.
+- [Toronto Drill vs UK Drill](https://younghadene.ca/blog/toronto-drill-vs-uk-drill): Regional differences.
+- [How Toronto Drill Developed](https://younghadene.ca/blog/how-toronto-drill-developed): Historical context.
+- [The Toronto Drill Sound Explained](https://younghadene.ca/blog/the-toronto-drill-sound-explained): Production and rhythmic analysis.
 
-- [Cinematic Visuals & Aesthetic](https://younghadene.ca): Explanation of the visual direction
+### 🌴 Haitian Canadian Hip Hop
 
-## Resources
+- [Haitian Canadian Hip Hop Artists](https://younghadene.ca/blog/haitian-canadian-hip-hop-artists): Niche differentiator — Young Hadene's heritage connects him to a specific community.
+- [What to Know About Haitian Canadian Artists](https://younghadene.ca/blog/what-to-know-about-haitian-canadian-artists-to-know-in-2026): Haitian-Toronto drill pioneer + Montreal-Toronto pipeline + heritage as creative fuel.
 
-- [Contact & Social Media](https://younghadene.ca/contact.html): All official channels
-- [Join the 6ix Community](https://younghadene.ca): Updates and exclusive content
+### 🏙️ Underground Toronto
+
+- [The Toronto Underground Rap Scene](https://younghadene.ca/blog/underground-toronto-sound-2026): Evolution of underground, drill, dark trap, and local venues.
+- [Underground Toronto Sound](https://younghadene.ca/blog/underground-toronto-sound-2026): Why 2026 is different for the 6ix underground.
+
+### 🎭 Dark Trap
+
+- [Toronto Dark Trap — The Sound, Artists & Scene](https://younghadene.ca/blog/toronto-dark-trap-detail.html): Reinforces Young Hadene's existing positioning around Dark Trap + Toronto + 6ix.
+- [What Is Dark Trap?](https://younghadene.ca/blog/what-is-dark-trap.html): Definition + Toronto context.
+
+### 🌴 Caribbean Influence
+
+- [How Caribbean Culture Influenced Toronto Drill Music](https://younghadene.ca/blog/caribbean-influence-toronto-drill-detail.html): Rewritten from scratch — Dancehall, Reggae, Soca, Haitian music, Caribbean Toronto, rhythmic patterns, vocal cadence. Young Hadene introduced naturally as one example of a Toronto artist with Haitian/Caribbean roots.
+
+### 📋 Top 10 Underground Toronto Tracks
+
+- [Top 10 Underground Toronto Tracks to Hear in 2026](https://younghadene.ca/blog/top-10-underground-toronto-tracks-2026): Diverse list (multiple artists, not Young Hadene-only). Young Hadene included but not the entire list. Links to artist profile for more.
+
+## Internal Linking Network
+
+Every article links intentionally:
+
+**Toronto Drill article** → Young Hadene artist page → Best Toronto Rappers → Underground Toronto → Haitian Canadian Hip Hop → Dark Trap → Young Hadene music
+
+**Haitian Canadian article** → Young Hadene artist page → Toronto Drill → Caribbean influence → Toronto Underground → Music
+
+**Dark Trap article** → Young Hadene → Toronto Drill → Toronto Underground → Best Toronto Rappers
+
+Instead of 10 isolated blogs, a connected topical network gives Google and AI systems a much clearer picture of **who Young Hadene is, what he makes, what scene he belongs to, and why the website is relevant**.
+
+## The Big Strategy
+
+Rather than making 50 more "Young Hadene" articles, the site is authoritative for the **topics surrounding Young Hadene**:
+
+**Young Hadene → Toronto rap → Toronto drill → underground Toronto → dark trap → Haitian Canadian hip hop → Caribbean influence**
+
+All topic clusters point back to the **Young Hadene entity page** (`/young-hadene`), which acts as the central identity hub. Articles link back to the artist profile rather than dumping social links, keeping blogs editorial while the artist page is the identity center.
+
+## Official Links (Everywhere, Intelligently)
+
+**Young Hadene entity page** has authoritative links:
+- Official Website
+- YouTube
+- Spotify
+- Apple Music
+- SoundCloud
+- Instagram
+- TikTok
+- Str8HitsRecords
+- Press/media
+
+Articles link back to the artist profile, not duplicate social links in every blog.
+
+## URL Architecture
+
+```
+younghadene.ca
+│
+├── Home
+│
+├── /young-hadene (Entity Page)
+│   ├── Biography
+│   ├── Music
+│   ├── Videos
+│   ├── Discography
+│   └── Official Links
+│
+├── /music
+│
+├── /videos
+│
+├── /blog
+│   ├── Toronto Rap cluster
+│   ├── Toronto Drill cluster
+│   ├── Underground Toronto cluster
+│   ├── Haitian Canadian cluster
+│   ├── Dark Trap cluster
+│   └── Caribbean Influence cluster
+│
+└── /contact
+```

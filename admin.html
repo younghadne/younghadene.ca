@@ -967,12 +967,38 @@
       document.getElementById('blogForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
-    function deletePost(id) {
+    async function deletePost(id) {
       if (!confirm('Delete this post?')) return;
-      let posts = getPosts();
-      posts = posts.filter(p => p.id !== id);
-      savePosts(posts);
-      loadPosts();
+      // First, try to delete via server API (persists across sessions & site regenerations)
+      const posts = getPosts();
+      const post = posts.find(p => p.id === id);
+      if (!post) { alert('Post not found.'); return; }
+      
+      try {
+        const resp = await fetch('/api/posts/' + post.slug, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await resp.json();
+        if (data.ok) {
+          // Also remove from localStorage
+          let posts = getPosts();
+          posts = posts.filter(p => p.id !== id);
+          savePosts(posts);
+          loadPosts();
+          showSuccess('Post deleted successfully.');
+        } else {
+          alert('Server delete failed: ' + (data.error || 'Unknown error'));
+        }
+      } catch (e) {
+        // Fallback: just remove from localStorage if server is unavailable
+        let posts = getPosts();
+        posts = posts.filter(p => p.id !== id);
+        savePosts(posts);
+        loadPosts();
+        showSuccess('Post deleted locally (server unavailable).');
+        console.warn('Server delete failed:', e);
+      }
     }
 
     function toggleFeatured(id) {
